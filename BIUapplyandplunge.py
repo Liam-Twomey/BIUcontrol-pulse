@@ -51,6 +51,7 @@ def resetplunger(plunger):
     return humidity, temperature
 ''' 
 if __name__=='__main__':
+    #Read flags from CLI input, store in args
     parser = argparse.ArgumentParser(description='Arguments for BIUcontrol')
     parser.add_argument('--stime',      help='Duration of sample application (seconds)',type=float,required=True)
     parser.add_argument('--rdelay',     help='Time to wait before retracting filter (seconds)',default = 0, type=float,required=False)
@@ -62,22 +63,13 @@ if __name__=='__main__':
     parser.add_argument('--pcycles', help='number of application pulses',default = numPulse, type=int,required=False)
     parser.add_argument('--breaktime', help='Pause between application pulses (seconds)',default = pulseSep, type=int,required=False)
     args = parser.parse_args()
-    #Default args for testing
-    '''class arguments:
-        def __init__(self, stime, rdelay, pdelay, dnplunge = False):
-            self.stime = stime
-            self.rdelay = rdelay
-            self.pdelay = pdelay
-            self.donotplunge = dnplunge   
-    args = arguments(0.03, .05, .05)
-    '''
+    
     # Default timing
     #cannontimetoreverse = 0.020
     #cannonreversedelay  = args.stime + args.sdelay+ cannontimetoreverse
 
-
+    #Setup GPIO for appropriate I/O
     GPIO.setwarnings(False)
-      
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(pin.cannon,GPIO.OUT)
     GPIO.setup(pin.plunger,GPIO.OUT)
@@ -86,11 +78,11 @@ if __name__=='__main__':
     #GPIO.setup(pin.pedalsensor,GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
     GPIO.setup(pin.interlock,GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
         
-    # Report environmental conditions
+    # Report environmental conditions -- not yet implemented
 #    humidity, temperature = readenvironment(pin.dht22)
 #    print('Temp={0:0.1f}\'C  Humidity={1:0.1f}% RH'.format(temperature, humidity))
 
-    # Display timing and avoid crash
+    # Print out initial conditions and inputs to terminal
     print("Timings:")
     print("Specimen application will start at time: 0")
     print("Specimen application will end at time: ",args.stime)
@@ -104,7 +96,7 @@ if __name__=='__main__':
     #    print("The cannon does not have sufficient time to reverse before plunging!!")
     #    exit()
 
-    # Check interlock
+    # Check interlock -- not currently functional
     '''if GPIO.input(pin.interlock)==1:
         print("Interlock fail: cryogen container is not in place")
         powerdownsensors(pin.sensorpower)
@@ -113,20 +105,19 @@ if __name__=='__main__':
     else:
         print("Safety interlock pass: cryogen container is in place")
     '''
-    # set up processes
+    # Setup threads so each major physical movement runs on a seperate process
     sample = threading.Thread(target=applysample, args=(pin.cannon,args.stime))
     filterposition = threading.Thread(target=filterreverse, args=(pin.filterposition,args.rdelay))
     plunger = threading.Thread(target=releaseplunger, args=(pin.plunger,args.pdelay))  
 
     
-    # start processes
+    # Initialize all threads
     if not args.donotplunge:
         plunger.start()
-        
     sample.start()  
     filterposition.start()
     
-    # Kuhnke plunger
+    # Kuhnke (big) plunger -- plunge and reset circuit
     time.sleep(kuhnketime+args.pdelay)
     resetplunger(pin.plunger)
     if max(args.stime,args.pdelay,args.rdelay) != args.pdelay:
