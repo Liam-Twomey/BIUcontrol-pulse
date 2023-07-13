@@ -94,7 +94,7 @@ pulsenote            = Text(app, text="(Uses retraction & plunge settings from s
 button_title = Text(app, text="Triggers", grid=[0,8,2,1], color='white', bg='dim grey')
 donotplunge = CheckBox(  app,                       text="Dry fire (do not plunge)?",   grid=[0,9,2,1], align='left')
 button_up   = PushButton(app, command=powerup,      text="        Ready        ", grid=[0,10])
-button_pulse= PushButton(app, command=startprocess, text="Pulse & Plunge",  grid=[1,10])
+button_pulse= PushButton(app, command=pulsestartprocess, text="Pulse & Plunge",  grid=[1,10])
 button_start= PushButton(app, command=startprocess, text="Spray & Plunge",  grid=[0,11])
 button_down = PushButton(app, command=powerdown,    text="         Abort         ",   grid=[1,11], align='left')
 

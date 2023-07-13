@@ -28,6 +28,15 @@ def applysample(cannon,duration):
     GPIO.output(cannon,GPIO.HIGH)
     time.sleep(duration)
     GPIO.output(cannon,GPIO.LOW)
+def pulseapplysample(cannon,duration):
+    '''I am not tested in this file and may be a pain
+    - Needs more args to fn to work '''
+    for x in range(Args.cycles):
+        GPIO.output(pin.cannon,GPIO.HIGH)
+        time.sleep(Args.stime)
+        GPIO.output(pin.cannon,GPIO.LOW)
+        time.sleep(0.2)
+    return
     
 def releaseplunger(plunger,wait):
     time.sleep(wait)
@@ -48,6 +57,10 @@ if __name__=='__main__':
     parser.add_argument('--pdelay',     help='Time to wait before plunging (seconds)',default = 0, type=float,required=False)
     parser.add_argument('--donotplunge',help='Do not fire the plunger (diagnostic)',action = 'store_true')  
     parser.add_argument('--pulse', help='Choose whether to spray contunuously (False) or pulse (True)', type=bool, default=False)
+    # Clean me up!
+    parser.add_argument('--ptime', help='Duration of application pulse (seconds)', default = pulseLen, type=float,required=False)
+    parser.add_argument('--pcycles', help='number of application pulses',default = numPulse, type=int,required=False)
+    parser.add_argument('--breaktime', help='Pause between application pulses (seconds)',default = pulseSep, type=int,required=False)
     args = parser.parse_args()
     #Default args for testing
     '''class arguments:
