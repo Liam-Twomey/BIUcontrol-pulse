@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 # Uncomment for use of pi
-#import RPi.GPIO as GPIO # For RPi
-import gpio as GPIO # Testing on Linux/Mac
+import RPi.GPIO as GPIO # For RPi
+#import gpio as GPIO # Testing on Linux/Mac
 #import Adafruit_DHT
 import time, threading
 import argparse
@@ -28,12 +28,12 @@ def applysample(cannon,duration):
     GPIO.output(cannon,GPIO.HIGH)
     time.sleep(duration)
     GPIO.output(cannon,GPIO.LOW)
-def pulseapplysample(cannon,cycles,stime,pbreak):
+def pulseapplysample(cannon,cycles,ptime,pbreak):
     '''I am not tested in this file and may be a pain
     - Needs more args to fn to work '''
-    for x in range(cycles):
+    for x in range(int(cycles)):
         GPIO.output(cannon,GPIO.HIGH)
-        time.sleep(stime)
+        time.sleep(ptime)
         GPIO.output(cannon,GPIO.LOW)
         time.sleep(pbreak)
     return
@@ -50,18 +50,18 @@ def resetplunger(plunger):
     humidity, temperature = Adafruit_DHT.read_retry(22, pin=dht22)
     return humidity, temperature
 ''' 
+
 if __name__=='__main__':
     #Read flags from CLI input, store in args
     parser = argparse.ArgumentParser(description='Arguments for BIUcontrol')
-    parser.add_argument('--stime',      help='Duration of sample application (seconds)',type=float,required=True)
+    parser.add_argument('--stime',      help='Duration of sample application or pulse (seconds)',type=float,required=True)
     parser.add_argument('--rdelay',     help='Time to wait before retracting filter (seconds)',default = 0, type=float,required=False)
     parser.add_argument('--pdelay',     help='Time to wait before plunging (seconds)',default = 0, type=float,required=False)
     parser.add_argument('--donotplunge',help='Do not fire the plunger (diagnostic)',action = 'store_true')  
     parser.add_argument('--pulse', help='Choose whether to spray contunuously (False) or pulse (True)', type=bool, default=False)
     # Clean me up!
-    parser.add_argument('--ptime', help='Duration of application pulse (seconds)', default = pulseLen, type=float,required=False)
-    parser.add_argument('--pcycles', help='number of application pulses',default = numPulse, type=int,required=False)
-    parser.add_argument('--breaktime', help='Pause between application pulses (seconds)',default = pulseSep, type=int,required=False)
+    parser.add_argument('--pcycles', help='number of application pulses',default = 1, type=int,required=False)
+    parser.add_argument('--breaktime', help='Pause between application pulses (seconds)',default = 50, type=int,required=False)
     args = parser.parse_args()
     
     # Default timing
@@ -114,9 +114,9 @@ if __name__=='__main__':
     # Initialize all threads
     if not args.donotplunge:
         plunger.start()
-    if args.pulse == True:
+    if (args.pulse == True):
         pulse.start()
-    elif args.pulse == False:
+    elif (args.pulse == False):
         sample.start()
     else:
         print('Error: args.pulse is undefined.')
