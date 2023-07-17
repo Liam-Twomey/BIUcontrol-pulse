@@ -2,8 +2,8 @@
 
 from guizero import App, TextBox, Text, PushButton, CheckBox
 from subprocess import call, Popen
-#import RPi.GPIO as GPIO
-import gpio as GPIO
+import RPi.GPIO as GPIO
+#import gpio as GPIO
 import BIUpinlist as pin
 
 def startprocess():
