@@ -2,6 +2,7 @@
 
 # Uncomment for use of pi
 import RPi.GPIO as GPIO
+#import gpio as GPIO
 import time, threading
 import argparse
 import sys, select
@@ -28,7 +29,7 @@ if __name__=='__main__':
     args = parser.parse_args()
 
     GPIO.setwarnings(False)
-    GPIO.cleanup()    
+    GPIO.cleanup()
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(pin.filterposition,GPIO.OUT)
     GPIO.setup(pin.sensorpower,GPIO.OUT)

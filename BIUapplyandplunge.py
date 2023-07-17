@@ -28,14 +28,14 @@ def applysample(cannon,duration):
     GPIO.output(cannon,GPIO.HIGH)
     time.sleep(duration)
     GPIO.output(cannon,GPIO.LOW)
-def pulseapplysample(cannon,duration):
+def pulseapplysample(cannon,cycles,stime,pbreak):
     '''I am not tested in this file and may be a pain
     - Needs more args to fn to work '''
-    for x in range(Args.cycles):
-        GPIO.output(pin.cannon,GPIO.HIGH)
-        time.sleep(Args.stime)
-        GPIO.output(pin.cannon,GPIO.LOW)
-        time.sleep(0.2)
+    for x in range(cycles):
+        GPIO.output(cannon,GPIO.HIGH)
+        time.sleep(stime)
+        GPIO.output(cannon,GPIO.LOW)
+        time.sleep(pbreak)
     return
     
 def releaseplunger(plunger,wait):
@@ -109,12 +109,18 @@ if __name__=='__main__':
     sample = threading.Thread(target=applysample, args=(pin.cannon,args.stime))
     filterposition = threading.Thread(target=filterreverse, args=(pin.filterposition,args.rdelay))
     plunger = threading.Thread(target=releaseplunger, args=(pin.plunger,args.pdelay))  
-
+    pulse = threading.Thread(target=pulseapplysample, args=(pin.cannon,args.stime,args.pcycles,args.breaktime))
     
     # Initialize all threads
     if not args.donotplunge:
         plunger.start()
-    sample.start()  
+    if args.pulse == True:
+        pulse.start()
+    elif args.pulse == False:
+        sample.start()
+    else:
+        print('Error: args.pulse is undefined.')
+
     filterposition.start()
     
     # Kuhnke (big) plunger -- plunge and reset circuit
