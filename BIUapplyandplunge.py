@@ -10,31 +10,58 @@ import sys, select
 import BIUpinlist as pin
 
 def filterforward(filterposition):
+    '''
+    :param filterposition: name of pin on RPi for filter paper
+    :return: void
+    '''
     print("Advancing the cannon")
     GPIO.output(filterposition,GPIO.HIGH)
 
 def powerupsensors(sensorpower):
+    '''
+    :param sensorpower: name of pin on RPi for powering up the sensor
+    :return: void
+    '''
     GPIO.output(sensorpower,GPIO.HIGH)
 
 def powerdownsensors(sensorpower):
+    '''
+    :param sensorpower: name of pin on RPi for powering down the sensor
+    :return: void
+    '''
     GPIO.output(sensorpower,GPIO.LOW)
     
 def filterreverse(filterposition,filterreversedelay):
+    '''
+    :param filterposition: pin name associated in positioning the filter
+    :param filterreversedelay: time delay to reverse the filter
+    :return: void
+    '''
     time.sleep(filterreversedelay)
     print("Reversing the filter")
     GPIO.output(filterposition,GPIO.LOW)
 
-def applysample(cannon,duration):
-    GPIO.output(cannon,GPIO.HIGH)
+def applysample(pin_cannon, duration:int):
+    '''
+    :param pin_cannon: pin name associated with the positioning solenoid
+    :param duration: time duration [ms]
+    :return: void
+    '''
+    GPIO.output(pin_cannon, GPIO.HIGH)
     time.sleep(duration)
-    GPIO.output(cannon,GPIO.LOW)
-def pulseapplysample(cannon,cycles,ptime,pbreak):
-    '''I am not tested in this file and may be a pain
-    - Needs more args to fn to work '''
+    GPIO.output(pin_cannon, GPIO.LOW)
+def pulseapplysample(pin_cannon, cycles:int, ptime:int, pbreak):
+    '''
+    :param pin_cannon:pin name associated with the positioning solenoid
+    :param cycles: number of sample application pulses
+    :param ptime: pulse time in [ms]
+    :param pbreak: pause between sample application pulses [s]
+    :return: void
+    '''
     for x in range(int(cycles)):
-        GPIO.output(cannon,GPIO.HIGH)
+        GPIO.output(pin_cannon, GPIO.HIGH)
         time.sleep(ptime)
-        GPIO.output(cannon,GPIO.LOW)
+        GPIO.output(pin_cannon, GPIO.LOW)
         time.sleep(pbreak)
     return
     
@@ -58,7 +85,7 @@ if __name__=='__main__':
     parser.add_argument('--rdelay',     help='Time to wait before retracting filter (seconds)',default = 0, type=float,required=False)
     parser.add_argument('--pdelay',     help='Time to wait before plunging (seconds)',default = 0, type=float,required=False)
     parser.add_argument('--donotplunge',help='Do not fire the plunger (diagnostic)',action = 'store_true')  
-    parser.add_argument('--pulse', help='Choose whether to spray contunuously (False) or pulse (True)', type=bool, default=False)
+    parser.add_argument('--pulse', help='Choose whether to spray continuously (False) or pulse (True)', type=bool, default=False)
     # Clean me up!
     parser.add_argument('--pcycles', help='number of application pulses',default = 1, type=int,required=False)
     parser.add_argument('--breaktime', help='Pause between application pulses (seconds)',default = 50, type=int,required=False)

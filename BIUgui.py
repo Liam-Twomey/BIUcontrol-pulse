@@ -2,11 +2,15 @@
 
 from guizero import App, TextBox, Text, PushButton, CheckBox
 from subprocess import call, Popen
-import RPi.GPIO as GPIO
-#import gpio as GPIO
+#import RPi.GPIO as GPIO
+import gpio as GPIO
 import BIUpinlist as pin
 
 def startprocess():
+    '''
+    This function takes in spraytime, retraction delay, and plunge delay to run BIUA&P in the system command line.
+    :return: void
+    '''
     print("Starting spray process.")
     spraytime        = str(float(stime.value)/1000)
     retractiondelay  = str(float(rdelay.value)/1000)
@@ -79,7 +83,7 @@ def text_box(disp:str, position:list, default):
     return label, box
 
     
-app = App(title="Back-it-up", layout="grid", width = 600, height = 400)
+app = App(title="Back-it-up", layout="grid", width = 600, height = 450)
 # Standard Spray
 stdlabel            = Text(app, text="Standard Spray", color='white', grid=[0,0,2,1], bg = 'dim gray')
 stimelabel, stime   = text_box('Spray time (ms):',       position = [0,1], default = 30)
@@ -89,7 +93,7 @@ pdelaylabel, pdelay = text_box('Plunge delay (ms):',     position = [0,3], defau
 pulselabel  = Text(app, text="(Anti) Pulse Spray", grid=[0,4,2,1], color='white', bg='dim gray')
 plen_label, plen   = text_box('Pulse length (ms):',   position = [0,5], default = 16)
 pnum_label, pnum   = text_box('Pulse count:',   position = [0,6], default = 5)
-pint_label, pint   = text_box('Pulse interval:',   position = [0,7], default = 20)
+pint_label, pint   = text_box('Pulse interval (ms):',   position = [0,7], default = 20)
 pulsenote            = Text(app, text="(Uses retraction & plunge settings from std.)", grid=[0,8,2,1])
 ## Buttons
 button_title = Text(app, text="Triggers", grid=[0,9,2,1], color='white', bg='dim grey')
