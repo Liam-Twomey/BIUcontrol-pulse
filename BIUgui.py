@@ -29,7 +29,7 @@ def text_box(app, disp:str, position:list, default):
     box.text_size = 12
     return label, box
 
-def main():
+if __name__=='__main__':
     app = App(title="Back-it-up", layout="grid", width = 600, height = 330)
     
     # GUI for Standard Spray parameters entries
@@ -64,7 +64,7 @@ def main():
     button_down.bg = "orange"
 
 
-    # Cleaning
+    # GUI for Cleaning operation
     cleanlabel    = Text(app, text="Cleaning settings:", grid=[2,0,2,1], color='white', bg='dim gray')
     cleancycleslabel, cleancycles = text_box(app, 'Cleaning cycles:',     position = [2,1], default = 5)
     cleantimelabel, cleantime = text_box(app, 'Clean pulse length (ms):', position = [2,2], default = 200)
@@ -85,4 +85,4 @@ def main():
     powerdown([button_start, button_pulse])
     # GPIO.cleanup()
     
-main()
+
