@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 from guizero import App, TextBox, Text, PushButton, CheckBox
-import RPi.GPIO as GPIO
-#import gpio as GPIO
+#import RPi.GPIO as GPIO
+import gpio as GPIO
 import BIUpinlist as pin
 
 from BIU_gui_callback_functions import *
@@ -15,9 +15,9 @@ from BIU_gui_callback_functions import *
 
 def text_box(app, disp:str, position:list, default):
     '''
-    Takes in app as zerogui application object, and then return the following to the caller of this function:
-        label: a zerogui Text object
-        box : a zerogui TextBox object
+    Takes in app as guizero application object, and then return the following to the caller of this function:
+        label: a guizero Text object
+        box : a guizero TextBox object
     '''
     if len(position) == 2:
         posbox = [position[0]+1, position[1]]
@@ -30,7 +30,7 @@ def text_box(app, disp:str, position:list, default):
     return label, box
 
 if __name__=='__main__':
-    app = App(title="Back-it-up", layout="grid", width = 600, height = 330)
+    app = App(title="Back-it-up", layout="grid", width = 600, height = 370)
     
     # GUI for Standard Spray parameters entries
     stdlabel            = Text(app, text="Standard Spray", color='white', grid=[0,0,2,1], bg = 'dim gray')
