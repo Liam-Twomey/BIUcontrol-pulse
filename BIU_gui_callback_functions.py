@@ -16,22 +16,22 @@ def startprocess(stime, rdelay, pdelay, is_dry_fire:bool):
         arguments.append("--donotplunge")
     call(arguments)
     
-def powerup(buttons_list):
+def powerup(tobe_enabled_buttons_list):
     print("Power up")
     arguments = ["python3","BIUpowerupdown.py","--updown","up"]
     call(arguments)
     try:
-        for button in buttons_list:
+        for button in tobe_enabled_buttons_list:
             button.enable()
     except:
         return
     
-def powerdown(buttons_list):
+def powerdown(tobe_disabled_buttons_list):
     print("Power down")
     arguments = ["python3","BIUpowerupdown.py","--updown","down"]
     call(arguments)
     try:
-        for button in buttons_list:
+        for button in tobe_disabled_buttons_list:
             button.disable()
     except:
         return
