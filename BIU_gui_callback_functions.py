@@ -17,6 +17,11 @@ def startprocess(stime, rdelay, pdelay, is_dry_fire:bool):
     call(arguments)
     
 def powerup(tobe_enabled_buttons_list):
+    '''
+    This function runs BIUpowerupdown.py in the system command line and then takes in a list of buttons to be enabled.
+    :param tobe_enabled_buttons_list: list of guizero.PushButton objects to be enabled
+    :return: void
+    '''
     print("Power up")
     arguments = ["python3","BIUpowerupdown.py","--updown","up"]
     call(arguments)
@@ -27,6 +32,11 @@ def powerup(tobe_enabled_buttons_list):
         return
     
 def powerdown(tobe_disabled_buttons_list):
+    '''
+    This function runs BIUpowerupdown.py in the system command line and then takes in a list of buttons to be disabled.
+    :param tobe_disabled_buttons_list: list of guizero.PushButton objects to be disabled
+    :return: void
+    '''
     print("Power down")
     arguments = ["python3","BIUpowerupdown.py","--updown","down"]
     call(arguments)
@@ -37,6 +47,14 @@ def powerdown(tobe_disabled_buttons_list):
         return
     
 def pulsestartprocess(rdelay, pdelay, plen, is_dry_fire):
+    '''
+    This function takes in retraction delay, plunge delay, and pulse length to run BIUA&P in the system command line.
+    :param rdelay: retraction delay
+    :param pdelay: plunge delay
+    :param plen: pulse length
+    :param is_dry_fire: boolean to determine whether to plunge or not
+    :return: void
+    '''
     print("Starting pulse spray.")
     retractiondelay  = str(float(rdelay.value)/1000)
     plungedelay      = str(float(pdelay.value)/1000)
@@ -47,6 +65,12 @@ def pulsestartprocess(rdelay, pdelay, plen, is_dry_fire):
     call(arguments)
 
 def cleanprocess(cleantime, cleancycles):
+    '''
+    This function takes in clean time and clean cycles to run BIUclean.py in the system command line.
+    :param cleantime: spray time for cleaning in [ms]
+    :param cleancycles: number of cleaning cycles
+    :return: void
+    '''
     print("Starting clean process")
     spraytime  = str(float(cleantime.value)/1000)
     cycles = cleancycles.value
