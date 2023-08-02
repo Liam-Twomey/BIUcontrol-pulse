@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 
 from guizero import App, TextBox, Text, PushButton, CheckBox
-#import RPi.GPIO as GPIO
-import gpio as GPIO
+#if Rpi:
+import RPi.GPIO as GPIO
+else:
+#import gpio as GPIO
 import BIUpinlist as pin
-
 from BIU_gui_callback_functions import *
+# OPTIONS
+use_neotrellis = True
+# Neotrellis options
+if use_neotrellis:
+    import neotrellis_enable as nte
 
 # def pedal():
 #     GPIO.setup(pin.pedalsensor,GPIO.IN, pull_up_down = GPIO.PUD_UP)
@@ -30,7 +36,7 @@ def text_box(app, disp:str, position:list, default):
     return label, box
 
 if __name__=='__main__':
-    app = App(title="Back-it-up", layout="grid", width = 600, height = 370)
+    app = App(title="Back-it-up", layout="grid", width = 600, height = 340)
     
     # GUI for Standard Spray parameters entries
     stdlabel            = Text(app, text="Standard Spray", color='white', grid=[0,0,2,1], bg = 'dim gray')
@@ -46,7 +52,7 @@ if __name__=='__main__':
     pulsenote            = Text(app, text="(Uses retraction & plunge settings from std.)", grid=[0,8,2,1])
 
     ## Buttons, commands are defined in BIU_gui_callback_functions.py
-    button_title = Text(master=app, text="Triggers", grid=[0,9,2,1], color='white', bg='dim grey')
+    button_title = Text(master=app, text="Triggers", grid=[0,9,4,1], color='white', bg='dim grey')
     donotplunge = CheckBox(master=app, text="Dry fire (do not plunge)?",   grid=[0,10,2,1], align='left')
 
     button_pulse= PushButton(master=app, text="Pulse & Plunge", grid=[2,11], align='left', command=pulsestartprocess, args = [rdelay, pdelay, plen, donotplunge.value==1])
@@ -62,8 +68,7 @@ if __name__=='__main__':
 
     button_down = PushButton(master=app, text="  Abort  ", grid=[3,11], align='left', command=powerdown, args = [[button_start, button_pulse]])
     button_down.bg = "orange"
-
-
+        
     # GUI for Cleaning operation
     cleanlabel    = Text(app, text="Cleaning settings:", grid=[2,0,2,1], color='white', bg='dim gray')
     cleancycleslabel, cleancycles = text_box(app, 'Cleaning cycles:',     position = [2,1], default = 5)
