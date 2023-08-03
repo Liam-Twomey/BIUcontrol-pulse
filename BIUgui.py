@@ -2,11 +2,11 @@
 
 from guizero import App, TextBox, Text, PushButton, CheckBox
 #if Rpi:
-import RPi.GPIO as GPIO
-else:
-#import gpio as GPIO
+#import RPi.GPIO as GPIO
+import gpio as GPIO
 import BIUpinlist as pin
 from BIU_gui_callback_functions import *
+
 # OPTIONS
 use_neotrellis = True
 # Neotrellis options
