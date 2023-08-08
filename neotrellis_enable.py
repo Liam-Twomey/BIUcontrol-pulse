@@ -1,26 +1,15 @@
 #!/usr/bin/env python3
 
 import time
-import board
+from board import SCL, SDA
+import busio
 from adafruit_neotrellis.neotrellis import NeoTrellis
 
 # create the i2c object for the trellis
-i2c_bus = board.I2C()  # uses board.SCL and board.SDA
-# i2c_bus = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a microcontroller
-
-# create a callback function
-def key_event(event):
-    if event.number in range(6):
-        if event.edge == NeoTrellis.EDGE_RISING:
-            trellis.pixels[event.number] = key_colors[event.number]
-        elif event.edge == NeoTrellis.EDGE_FALLING:
-            trellis.pixels[event.number] = (0, 0, 0)
+i2c_bus = busio.I2C(SCL, SDA)
 
 # create the trellis
 trellis = NeoTrellis(i2c_bus)
-
-# Set the brightness value (0 to 1.0)
-trellis.brightness = 0.5
 
 # some color definitions
 OFF = (0, 0, 0)
@@ -29,14 +18,39 @@ ORANGE = (255, 128, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 PURPLE = (180, 0, 255)
-WHITE = (255, 255, 255
+WHITE = (255, 255, 255)
 
-# activate rising and falling edge events on all keys
-for i in range(6):
+
+def blink(event, index):
+    # turn the LED on when a rising edge is detected
+    if event.edge == NeoTrellis.EDGE_RISING:
+        if index == 0:
+            trellis.pixels[event.number] = GREEN
+        elif index == 1:
+            trellis.pixels[event.number] = RED
+        elif index == 2:
+            trellis.pixels[event.number] = PURPLE
+        elif index == 3:
+            trellis.pixels[event.number] = ORANGE
+        elif index == 4:
+            trellis.pixels[event.number] = BLUE
+        else:
+            trellis.pixels[event.number] = WHITE
+    # turn the LED off when a rising edge is detected
+    elif event.edge == NeoTrellis.EDGE_FALLING:
+        trellis.pixels[event.number] = OFF
+
+
+for i in [0, 1, 2, 3, 4, 5]:
+    # activate rising edge events on all keys
     trellis.activate_key(i, NeoTrellis.EDGE_RISING)
+    # activate falling edge events on all keys
     trellis.activate_key(i, NeoTrellis.EDGE_FALLING)
-    trellis.callbacks[i] = key_event
+    # set all keys to trigger the blink callback
+    trellis.callbacks[i] = blink(i)
 
 while True:
-    # call the sync function to update the trellis state
+    # call the sync function call any triggered callbacks
     trellis.sync()
+    # the trellis can only be read every 10 millisecons or so
+    time.sleep(.02)
