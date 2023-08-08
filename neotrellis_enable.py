@@ -34,8 +34,10 @@ def blink(event, index):
             trellis.pixels[event.number] = ORANGE
         elif index == 4:
             trellis.pixels[event.number] = BLUE
-        else:
+        elif index == 5:
             trellis.pixels[event.number] = WHITE
+        else:
+            trellis.pixels[event.number] = OFF
     # turn the LED off when a rising edge is detected
     elif event.edge == NeoTrellis.EDGE_FALLING:
         trellis.pixels[event.number] = OFF
@@ -47,10 +49,10 @@ for i in [0, 1, 2, 3, 4, 5]:
     # activate falling edge events on all keys
     trellis.activate_key(i, NeoTrellis.EDGE_FALLING)
     # set all keys to trigger the blink callback
-    trellis.callbacks[i] = blink(i)
+    trellis.callbacks[i] = lambda event: blink(event, i)
 
 while True:
     # call the sync function call any triggered callbacks
     trellis.sync()
-    # the trellis can only be read every 10 millisecons or so
+    # the trellis can only be read every 10 milliseconds or so
     time.sleep(.02)
