@@ -9,7 +9,7 @@ from BIU_gui_callback_functions import *
 
 # OPTIONS
 use_neotrellis = True
- Neotrellis options
+# Neotrellis options
 if use_neotrellis:
     import neotrellis_enable as nte
 
