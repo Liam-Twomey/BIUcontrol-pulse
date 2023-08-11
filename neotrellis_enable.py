@@ -17,14 +17,15 @@ if __name__=='__main__':
     RED = (255, 0, 0)
     ORANGE = (255, 78, 0)
     GREEN = (0, 255, 0)
-    BLUE = (0, 0, 255)
+    BLUE = (10, 10, 255)
     PURPLE = (180, 0, 255)
     WHITE = (200, 200, 200)
+    
+    #set brightness of the trellis
+    trellis.brightness = 0.5
 
     #set colors for each pixel button
     trellis.pixels[0] = GREEN
-    trellis.pixels[1] = RED
-    trellis.pixels[2] = PURPLE
     trellis.pixels[3] = ORANGE
     trellis.pixels[4] = BLUE
     trellis.pixels[5] = WHITE
@@ -33,6 +34,7 @@ if __name__=='__main__':
 
     # this will be called when button events are received
     def pixel_button_action(event):
+        global ok2plunge
         # turn the LED off when a rising edge is detected
         if event.edge == NeoTrellis.EDGE_RISING:
             trellis.pixels[event.number] = OFF
@@ -42,6 +44,8 @@ if __name__=='__main__':
                 print("Executing #0 power up")
                 trellis.pixels[0] = GREEN
                 ok2plunge = True
+                trellis.pixels[1] = RED
+                trellis.pixels[2] = PURPLE
             elif event.number == 1:
                 if ok2plunge:
                     print("Executing #1 spray and plunge")
@@ -54,6 +58,8 @@ if __name__=='__main__':
                 print("Executing #3 power down")
                 trellis.pixels[3] = ORANGE
                 ok2plunge = False
+                trellis.pixels[1] = OFF
+                trellis.pixels[2] = OFF 
             elif event.number == 4:
                 print("Executing #4 cleaning")
                 trellis.pixels[4] = BLUE
