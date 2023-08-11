@@ -18,7 +18,7 @@ if __name__=='__main__':
     ORANGE = (255, 78, 0)
     GREEN = (0, 255, 0)
     BLUE = (10, 10, 255)
-    PURPLE = (180, 0, 255)
+    PURPLE = (90, 0, 255)
     WHITE = (200, 200, 200)
     
     #set brightness of the trellis
@@ -28,7 +28,7 @@ if __name__=='__main__':
     trellis.pixels[0] = GREEN
     trellis.pixels[3] = ORANGE
     trellis.pixels[4] = BLUE
-    trellis.pixels[5] = WHITE
+    trellis.pixels[7] = WHITE
     
     ok2plunge = False
 
@@ -63,9 +63,9 @@ if __name__=='__main__':
             elif event.number == 4:
                 print("Executing #4 cleaning")
                 trellis.pixels[4] = BLUE
-            elif event.number == 5:
-                print("Executing #5 dry fire")
-                trellis.pixels[5] = WHITE
+            elif event.number == 7:
+                print("Executing #7 dry fire")
+                trellis.pixels[7] = WHITE
             else:
                 print("Wrong button pressed")
 
