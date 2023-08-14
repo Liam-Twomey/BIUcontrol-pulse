@@ -151,6 +151,7 @@ if __name__=='__main__':
     filterposition_thread.start()
     
     # Kuhnke (big) plunger -- plunge and reset circuit
+    print("delay=", kuhnketime+args.pdelay)
     time.sleep(kuhnketime+args.pdelay)
     resetplunger(pin.plunger)
     if max(args.stime,args.pdelay,args.rdelay) != args.pdelay:

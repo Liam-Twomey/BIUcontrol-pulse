@@ -157,6 +157,10 @@ if __name__=='__main__':
 
     #shutdown
     print('BIU program shutting down...')
+    
+    for i in [0, 1, 2, 3, 4, 7]: 
+        trellis.pixels[i] = OFF
+
     powerdown([button_start, button_pulse])
     # GPIO.cleanup()
     
