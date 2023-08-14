@@ -96,7 +96,7 @@ if __name__=='__main__':
 
         # this will be called when button events are received
         def pixel_button_action(event):
-            global ok2plunge, button_start, button_pulse, stime, rdelay, pdelay, donotplunge, plen, cleantime, cleancycles
+            global ok2plunge, button_start, button_pulse, stime, rdelay, pdelay, donotplunge, plen, cleantime, cleancycles, pint, pnum
             # turn the LED off when a rising edge is detected
             if event.edge == NeoTrellis.EDGE_RISING:
                 trellis.pixels[event.number] = OFF
@@ -117,7 +117,7 @@ if __name__=='__main__':
                 elif event.number == 2:
                     if ok2plunge:
                         print("Executing #2 pulse and plunge")
-                        pulsestartprocess(rdelay, pdelay, plen, donotplunge.value==1)
+                        pulsestartprocess(rdelay, pdelay, pnum, plen, pint, donotplunge.value==1)
                         trellis.pixels[2] = PURPLE
                 elif event.number == 3:
                     print("Executing #3 power down")

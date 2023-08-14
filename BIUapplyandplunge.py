@@ -41,10 +41,10 @@ def filterreverse(filterposition,filterreversedelay):
     print("Reversing the filter")
     GPIO.output(filterposition,GPIO.LOW)
 
-def applysample(pin_cannon, duration:int):
+def applysample(pin_cannon, duration:float):
     '''
     :param pin_cannon: pin name associated with the positioning solenoid
-    :param duration: time duration [ms]
+    :param duration: time duration [s]
     :return: void
     '''
     GPIO.output(pin_cannon, GPIO.HIGH)
