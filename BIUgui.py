@@ -114,11 +114,17 @@ if __name__=='__main__':
                         print("Trellis: Executing #1 spray and plunge")
                         startprocess(stime, rdelay, pdelay, donotplunge.value==1)
                         trellis.pixels[1] = RED
+                        ok2plunge = False
+                        trellis.pixels[1] = OFF
+                        trellis.pixels[2] = OFF
                 elif event.number == 2:
                     if ok2plunge:
                         print("Trellis: Executing #2 pulse and plunge")
                         pulsestartprocess(rdelay, pdelay, pnum, plen, pint, donotplunge.value==1)
                         trellis.pixels[2] = PURPLE
+                        ok2plunge = False
+                        trellis.pixels[1] = OFF
+                        trellis.pixels[2] = OFF
                 elif event.number == 3:
                     print("Trellis: Executing #3 power down")
                     powerdown([button_start, button_pulse])
