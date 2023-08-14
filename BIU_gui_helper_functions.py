@@ -82,8 +82,9 @@ def pulsestartprocess(rdelay, pdelay, pnum, plen, pinterval, is_dry_fire):
     print("Starting pulse spray.")
     retractiondelay  = str(float(rdelay.value)/1000)
     plungedelay      = str(float(pdelay.value)/1000)
-    pulselength       = str(float(plen.value)/1000)
-    arguments = ["python3","BIUapplyandplunge.py","--pulse","--pcycles",pnum.value,"--stime",pulselength, "--breaktime", pinterval.value, "--rdelay",retractiondelay,"--pdelay",plungedelay]
+    pulselength      = str(float(plen.value)/1000)
+    breaktime        = str(float(pinterval.value)/1000)
+    arguments = ["python3","BIUapplyandplunge.py","--pulse","--pcycles",pnum.value,"--stime",pulselength, "--breaktime", breaktime, "--rdelay",retractiondelay,"--pdelay",plungedelay]
     if (is_dry_fire):
         arguments.append("--donotplunge")
     call(arguments)
