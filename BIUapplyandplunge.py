@@ -133,22 +133,22 @@ if __name__=='__main__':
         print("Safety interlock pass: cryogen container is in place")
     '''
     # Setup threads so each major physical movement runs on a seperate process
-    sample = threading.Thread(target=applysample, args=(pin.cannon,args.stime))
-    filterposition = threading.Thread(target=filterreverse, args=(pin.filterposition,args.rdelay))
-    plunger = threading.Thread(target=releaseplunger, args=(pin.plunger,args.pdelay))  
-    pulse = threading.Thread(target=pulseapplysample, args=(pin.cannon,args.stime,args.pcycles,args.breaktime))
+    sample_thread = threading.Thread(target=applysample, args=(pin.cannon, args.stime))
+    filterposition_thread = threading.Thread(target=filterreverse, args=(pin.filterposition, args.rdelay))
+    plunger_thread = threading.Thread(target=releaseplunger, args=(pin.plunger, args.pdelay))
+    pulse_thread = threading.Thread(target=pulseapplysample, args=(pin.cannon, args.pcycles, args.stime, args.breaktime))
     
     # Initialize all threads
     if not args.donotplunge:
-        plunger.start()
+        plunger_thread.start()
     if (args.pulse == True):
-        pulse.start()
+        pulse_thread.start()
     elif (args.pulse == False):
-        sample.start()
+        sample_thread.start()
     else:
         print('Error: args.pulse is undefined.')
 
-    filterposition.start()
+    filterposition_thread.start()
     
     # Kuhnke (big) plunger -- plunge and reset circuit
     time.sleep(kuhnketime+args.pdelay)
