@@ -103,7 +103,7 @@ if __name__=='__main__':
             # turn the LED off when a rising edge is detected
             elif event.edge == NeoTrellis.EDGE_FALLING:
                 if event.number == 0:
-                    print("Executing #0 power up")
+                    print("Trellis: Executing #0 power up")
                     powerup([button_start, button_pulse])
                     trellis.pixels[0] = GREEN
                     ok2plunge = True
@@ -111,36 +111,36 @@ if __name__=='__main__':
                     trellis.pixels[2] = PURPLE
                 elif event.number == 1:
                     if ok2plunge:
-                        print("Executing #1 spray and plunge")
+                        print("Trellis: Executing #1 spray and plunge")
                         startprocess(stime, rdelay, pdelay, donotplunge.value==1)
                         trellis.pixels[1] = RED
                 elif event.number == 2:
                     if ok2plunge:
-                        print("Executing #2 pulse and plunge")
+                        print("Trellis: Executing #2 pulse and plunge")
                         pulsestartprocess(rdelay, pdelay, pnum, plen, pint, donotplunge.value==1)
                         trellis.pixels[2] = PURPLE
                 elif event.number == 3:
-                    print("Executing #3 power down")
+                    print("Trellis: Executing #3 power down")
                     powerdown([button_start, button_pulse])
                     trellis.pixels[3] = ORANGE
                     ok2plunge = False
                     trellis.pixels[1] = OFF
                     trellis.pixels[2] = OFF
                 elif event.number == 4:
-                    print("Executing #4 cleaning")
+                    print("Trellis: Executing #4 cleaning")
                     cleanprocess(cleantime, cleancycles)
                     trellis.pixels[4] = BLUE
                 elif event.number == 7:
                     if donotplunge.value == 0:
-                        print("Executing #7 dry fire")
+                        print("Trellis: Executing #7 dry fire")
                         donotplunge.value = 1
                         trellis.pixels[7] = YELLOW
                     else:
-                        print("Toggle off #7 dry fire")
+                        print("Trellis: Toggle off #7 dry fire")
                         donotplunge.value = 0
                         trellis.pixels[7] = WHITE
                 else:
-                    print("Wrong button pressed")
+                    print("Trellis: Wrong button pressed")
 
 
         for i in [0, 1, 2, 3, 4, 7]:
@@ -150,8 +150,24 @@ if __name__=='__main__':
             trellis.activate_key(i, NeoTrellis.EDGE_FALLING)
             # set all keys to trigger the blink callback
             trellis.callbacks[i] = pixel_button_action
-
-        app.repeat(20, trellis.sync)
+            
+        def gui_repeating_tasks():
+            global trellis, button_start
+            trellis.sync()
+            if donotplunge.value==1:
+                trellis.pixels[7] = YELLOW
+            else:
+                trellis.pixels[7] = WHITE
+            if button_start.enabled:
+                ok2plunge = True
+                trellis.pixels[1] = RED
+                trellis.pixels[2] = PURPLE
+            else:
+                ok2plunge = False
+                trellis.pixels[1] = OFF
+                trellis.pixels[2] = OFF    
+            
+        app.repeat(90, gui_repeating_tasks)
 
     app.display()
 
