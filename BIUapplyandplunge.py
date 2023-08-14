@@ -58,7 +58,7 @@ def pulseapplysample(pin_cannon, cycles:int, ptime:int, pbreak):
     :param pbreak: pause between sample application pulses [s]
     :return: void
     '''
-    for x in range(int(cycles)):
+    for x in range(cycles):
         GPIO.output(pin_cannon, GPIO.HIGH)
         time.sleep(ptime)
         GPIO.output(pin_cannon, GPIO.LOW)
@@ -85,7 +85,7 @@ if __name__=='__main__':
     parser.add_argument('--rdelay',     help='Time to wait before retracting filter (seconds)',default = 0, type=float,required=False)
     parser.add_argument('--pdelay',     help='Time to wait before plunging (seconds)',default = 0, type=float,required=False)
     parser.add_argument('--donotplunge',help='Do not fire the plunger (diagnostic)',action = 'store_true')  
-    parser.add_argument('--pulse', help='Choose whether to spray continuously (False) or pulse (True)', type=bool, default=False)
+    parser.add_argument('--pulse', help='If provided, pulse the sprayer.',action = 'store_true')
     # Clean me up!
     parser.add_argument('--pcycles', help='number of application pulses',default = 1, type=int,required=False)
     parser.add_argument('--breaktime', help='Pause between application pulses (seconds)',default = 50, type=int,required=False)
@@ -133,21 +133,18 @@ if __name__=='__main__':
         print("Safety interlock pass: cryogen container is in place")
     '''
     # Setup threads so each major physical movement runs on a seperate process
-    sample_thread = threading.Thread(target=applysample, args=(pin.cannon, args.stime))
+    if args.pulse:
+        sample_thread = threading.Thread(target=pulseapplysample, args=(pin.cannon, args.pcycles, args.stime, args.breaktime))
+    else:
+        sample_thread = threading.Thread(target=applysample, args=(pin.cannon, args.stime))
     filterposition_thread = threading.Thread(target=filterreverse, args=(pin.filterposition, args.rdelay))
     plunger_thread = threading.Thread(target=releaseplunger, args=(pin.plunger, args.pdelay))
-    pulse_thread = threading.Thread(target=pulseapplysample, args=(pin.cannon, args.pcycles, args.stime, args.breaktime))
     
     # Initialize all threads
     if not args.donotplunge:
         plunger_thread.start()
-    if (args.pulse == True):
-        pulse_thread.start()
-    elif (args.pulse == False):
-        sample_thread.start()
-    else:
-        print('Error: args.pulse is undefined.')
 
+    sample_thread.start()
     filterposition_thread.start()
     
     # Kuhnke (big) plunger -- plunge and reset circuit

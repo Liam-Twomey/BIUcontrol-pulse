@@ -32,10 +32,13 @@ def startprocess(stime, rdelay, pdelay, is_dry_fire:bool):
     spraytime        = str(float(stime.value)/1000)
     retractiondelay  = str(float(rdelay.value)/1000)
     plungedelay      = str(float(pdelay.value)/1000)
-    arguments = ["python3","BIUapplyandplunge.py","--pulse",'False',"--stime",spraytime,"--rdelay",retractiondelay,"--pdelay",plungedelay]
+    print('starting A&P')
+    arguments = ["python3","BIUapplyandplunge.py","--stime",spraytime,"--rdelay",retractiondelay,"--pdelay",plungedelay]
     if is_dry_fire:
         arguments.append("--donotplunge")
     call(arguments)
+    print("A&P finished")
+    return
     
 def powerup(tobe_enabled_buttons_list):
     '''
@@ -80,7 +83,7 @@ def pulsestartprocess(rdelay, pdelay, pnum, plen, pinterval, is_dry_fire):
     retractiondelay  = str(float(rdelay.value)/1000)
     plungedelay      = str(float(pdelay.value)/1000)
     pulselength       = str(float(plen.value)/1000)
-    arguments = ["python3","BIUapplyandplunge.py","--pulse",'True',"--pcycles",pnum.value,"--stime",pulselength, "--breaktime", pinterval.value, "--rdelay",retractiondelay,"--pdelay",plungedelay]
+    arguments = ["python3","BIUapplyandplunge.py","--pulse","--pcycles",pnum.value,"--stime",pulselength, "--breaktime", pinterval.value, "--rdelay",retractiondelay,"--pdelay",plungedelay]
     if (is_dry_fire):
         arguments.append("--donotplunge")
     call(arguments)
