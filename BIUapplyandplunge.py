@@ -87,8 +87,8 @@ if __name__=='__main__':
     parser.add_argument('--donotplunge',help='Do not fire the plunger (diagnostic)',action = 'store_true')  
     parser.add_argument('--pulse', help='If provided, pulse the sprayer.',action = 'store_true')
     # Clean me up!
-    parser.add_argument('--pcycles', help='number of application pulses',default = 1, type=int,required=False)
-    parser.add_argument('--breaktime', help='Pause between application pulses (seconds)',default = 50, type=int,required=False)
+    parser.add_argument('--pcycles', help='number of application pulses',default = 1, type=int)
+    parser.add_argument('--breaktime', help='Pause between application pulses (seconds)', default = 0.001, type=float)
     args = parser.parse_args()
     
     # Default timing
