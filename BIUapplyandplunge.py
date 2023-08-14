@@ -50,7 +50,7 @@ def applysample(pin_cannon, duration:float):
     GPIO.output(pin_cannon, GPIO.HIGH)
     time.sleep(duration)
     GPIO.output(pin_cannon, GPIO.LOW)
-def pulseapplysample(pin_cannon, cycles:int, ptime:int, pbreak):
+def pulseapplysample(pin_cannon, cycles:int, stime:float, pbreak:float):
     '''
     :param pin_cannon:pin name associated with the positioning solenoid
     :param cycles: number of sample application pulses
@@ -60,7 +60,7 @@ def pulseapplysample(pin_cannon, cycles:int, ptime:int, pbreak):
     '''
     for x in range(cycles):
         GPIO.output(pin_cannon, GPIO.HIGH)
-        time.sleep(ptime)
+        time.sleep(stime)
         GPIO.output(pin_cannon, GPIO.LOW)
         time.sleep(pbreak)
     return
