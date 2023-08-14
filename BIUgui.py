@@ -5,35 +5,16 @@ from guizero import App, TextBox, Text, PushButton, CheckBox
 #import RPi.GPIO as GPIO
 import gpio as GPIO
 import BIUpinlist as pin
-from BIU_gui_callback_functions import *
+from BIU_gui_helper_functions import *
 
 # OPTIONS
 use_neotrellis = True
 # Neotrellis options
 if use_neotrellis:
-    import neotrellis_enable as nte
+    from board import SCL, SDA
+    import busio
+    from adafruit_neotrellis.neotrellis import NeoTrellis
 
-# def pedal():
-#     GPIO.setup(pin.pedalsensor,GPIO.IN, pull_up_down = GPIO.PUD_UP)
-#     if button_start.enabled and GPIO.input(pin.pedalsensor)==0:
-#         print("Pedal triggered")
-#         startprocess()
-
-def text_box(app, disp:str, position:list, default):
-    '''
-    Takes in app as guizero application object, and then return the following to the caller of this function:
-        label: a guizero Text object
-        box : a guizero TextBox object
-    '''
-    if len(position) == 2:
-        posbox = [position[0]+1, position[1]]
-    else:
-        print('Incorrect number of arguments to text_box.')
-        return
-    label =    Text(app, grid = position, text = disp,  align = 'left')
-    box   = TextBox(app, grid=posbox,     text=str(default), align='left')
-    box.text_size = 12
-    return label, box
 
 if __name__=='__main__':
     app = App(title="Back-it-up", layout="grid", width = 600, height = 340)
@@ -51,7 +32,7 @@ if __name__=='__main__':
     pint_label, pint   = text_box(app, 'Pulse interval (ms):',   position = [0,7], default = 20)
     pulsenote            = Text(app, text="(Uses retraction & plunge settings from std.)", grid=[0,8,2,1])
 
-    ## Buttons, commands are defined in BIU_gui_callback_functions.py
+    ## Buttons, commands are defined in BIU_gui_helper_functions.py
     button_title = Text(master=app, text="Triggers", grid=[0,9,4,1], color='white', bg='dim grey')
     donotplunge = CheckBox(master=app, text="Dry fire (do not plunge)?",   grid=[0,10,2,1], align='left')
 
@@ -83,6 +64,89 @@ if __name__=='__main__':
     # GPIO.setwarnings(False)
     # GPIO.setmode(GPIO.BCM)
     # app.repeat(100,pedal)
+
+    if use_neotrellis:
+        # create the i2c object for the trellis
+        i2c_bus = busio.I2C(SCL, SDA)
+
+        # create the trellis object and associate it to the the i2c object that was created
+        trellis = NeoTrellis(i2c_bus)
+
+        # some color definitions
+        OFF = (0, 0, 0)
+        RED = (255, 0, 0)
+        ORANGE = (255, 78, 0)
+        GREEN = (0, 255, 0)
+        BLUE = (10, 10, 255)
+        PURPLE = (90, 0, 255)
+        WHITE = (200, 200, 200)
+
+        # set brightness of the trellis
+        trellis.brightness = 0.5
+
+        # set colors for each pixel button
+        trellis.pixels[0] = GREEN
+        trellis.pixels[3] = ORANGE
+        trellis.pixels[4] = BLUE
+        trellis.pixels[7] = WHITE
+
+        ok2plunge = False
+
+
+        # this will be called when button events are received
+        def pixel_button_action(event):
+            global ok2plunge, button_start, button_pulse, stime, rdelay, pdelay, donotplunge, plen, cleantime, cleancycles
+            # turn the LED off when a rising edge is detected
+            if event.edge == NeoTrellis.EDGE_RISING:
+                trellis.pixels[event.number] = OFF
+            # turn the LED off when a rising edge is detected
+            elif event.edge == NeoTrellis.EDGE_FALLING:
+                if event.number == 0:
+                    print("Executing #0 power up")
+                    powerup([button_start, button_pulse])
+                    trellis.pixels[0] = GREEN
+                    ok2plunge = True
+                    trellis.pixels[1] = RED
+                    trellis.pixels[2] = PURPLE
+                elif event.number == 1:
+                    if ok2plunge:
+                        print("Executing #1 spray and plunge")
+                        startprocess(stime, rdelay, pdelay, donotplunge.value==1)
+                        trellis.pixels[1] = RED
+                elif event.number == 2:
+                    if ok2plunge:
+                        print("Executing #2 pulse and plunge")
+                        pulsestartprocess(rdelay, pdelay, plen, donotplunge.value==1)
+                        trellis.pixels[2] = PURPLE
+                elif event.number == 3:
+                    print("Executing #3 power down")
+                    powerdown([button_start, button_pulse])
+                    trellis.pixels[3] = ORANGE
+                    ok2plunge = False
+                    trellis.pixels[1] = OFF
+                    trellis.pixels[2] = OFF
+                elif event.number == 4:
+                    print("Executing #4 cleaning")
+                    cleanprocess(cleantime, cleancycles)
+                    trellis.pixels[4] = BLUE
+                elif event.number == 7:
+                    print("Executing #7 dry fire")
+                    donotplunge.value = 1
+                    trellis.pixels[7] = WHITE
+                else:
+                    print("Wrong button pressed")
+
+
+        for i in range[0, 1, 2, 3, 4, 7]:
+            # activate rising edge events on all keys
+            trellis.activate_key(i, NeoTrellis.EDGE_RISING)
+            # activate falling edge events on all keys
+            trellis.activate_key(i, NeoTrellis.EDGE_FALLING)
+            # set all keys to trigger the blink callback
+            trellis.callbacks[i] = pixel_button_action
+
+        app.repeat(20, trellis.sync)
+
     app.display()
 
     #shutdown
