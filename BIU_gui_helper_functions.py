@@ -67,7 +67,7 @@ def powerdown(tobe_disabled_buttons_list):
     except:
         return
     
-def pulsestartprocess(rdelay, pdelay, plen, is_dry_fire):
+def pulsestartprocess(rdelay, pdelay, pnum, plen, pinterval, is_dry_fire):
     '''
     This function takes in retraction delay, plunge delay, and pulse length to run BIUA&P in the system command line.
     :param rdelay: retraction delay

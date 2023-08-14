@@ -2,8 +2,8 @@
 
 from guizero import App, TextBox, Text, PushButton, CheckBox
 #if Rpi:
-#import RPi.GPIO as GPIO
-import gpio as GPIO
+import RPi.GPIO as GPIO
+#import gpio as GPIO
 import BIUpinlist as pin
 from BIU_gui_helper_functions import *
 
@@ -36,7 +36,7 @@ if __name__=='__main__':
     button_title = Text(master=app, text="Triggers", grid=[0,9,4,1], color='white', bg='dim grey')
     donotplunge = CheckBox(master=app, text="Dry fire (do not plunge)?",   grid=[0,10,2,1], align='left')
 
-    button_pulse= PushButton(master=app, text="Pulse & Plunge", grid=[2,11], align='left', command=pulsestartprocess, args = [rdelay, pdelay, plen, donotplunge.value==1])
+    button_pulse= PushButton(master=app, text="Pulse & Plunge", grid=[2,11], align='left', command=pulsestartprocess, args = [rdelay, pdelay, pnum, plen, pint, donotplunge.value==1])
     button_pulse.disable()
     button_pulse.bg = 'violet'
 
@@ -80,6 +80,7 @@ if __name__=='__main__':
         BLUE = (10, 10, 255)
         PURPLE = (90, 0, 255)
         WHITE = (200, 200, 200)
+        YELLOW = (200, 200, 0)
 
         # set brightness of the trellis
         trellis.brightness = 0.5
@@ -130,14 +131,19 @@ if __name__=='__main__':
                     cleanprocess(cleantime, cleancycles)
                     trellis.pixels[4] = BLUE
                 elif event.number == 7:
-                    print("Executing #7 dry fire")
-                    donotplunge.value = 1
-                    trellis.pixels[7] = WHITE
+                    if donotplunge.value == 0:
+                        print("Executing #7 dry fire")
+                        donotplunge.value = 1
+                        trellis.pixels[7] = YELLOW
+                    else:
+                        print("Toggle off #7 dry fire")
+                        donotplunge.value = 0
+                        trellis.pixels[7] = WHITE
                 else:
                     print("Wrong button pressed")
 
 
-        for i in range[0, 1, 2, 3, 4, 7]:
+        for i in [0, 1, 2, 3, 4, 7]:
             # activate rising edge events on all keys
             trellis.activate_key(i, NeoTrellis.EDGE_RISING)
             # activate falling edge events on all keys

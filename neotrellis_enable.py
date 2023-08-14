@@ -6,7 +6,7 @@ import busio
 from adafruit_neotrellis.neotrellis import NeoTrellis
 
 
-if __name__=='__main__'
+if __name__=='__main__':
     #create the i2c object for the trellis
     i2c_bus = busio.I2C(SCL, SDA)
 
@@ -70,7 +70,7 @@ if __name__=='__main__'
             else:
                 print("Wrong button pressed")
 
-    for i in range[0,1,2,3,4,7]:
+    for i in [0,1,2,3,4,7]:
         #activate rising edge events on all keys
         trellis.activate_key(i, NeoTrellis.EDGE_RISING)
         #activate falling edge events on all keys
