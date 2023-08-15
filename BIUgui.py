@@ -16,7 +16,10 @@ if use_neotrellis:
     from adafruit_neotrellis.neotrellis import NeoTrellis
 
 
+
 if __name__=='__main__':
+    buttons_tracker = ButtonsStateTracker()
+    
     app = App(title="Back-it-up", layout="grid", width = 600, height = 340)
     
     # GUI for Standard Spray parameters entries
@@ -36,18 +39,18 @@ if __name__=='__main__':
     button_title = Text(master=app, text="Triggers", grid=[0,9,4,1], color='white', bg='dim grey')
     donotplunge = CheckBox(master=app, text="Dry fire (do not plunge)?",   grid=[0,10,2,1], align='left')
 
-    button_pulse= PushButton(master=app, text="Pulse & Plunge", grid=[2,11], align='left', command=pulsestartprocess, args = [rdelay, pdelay, pnum, plen, pint, donotplunge.value==1])
+    button_pulse= PushButton(master=app, text="Pulse & Plunge", grid=[2,11], align='left', command=pulsestartprocess, args = [buttons_tracker, rdelay, pdelay, pnum, plen, pint, donotplunge.value==1])
     button_pulse.disable()
     button_pulse.bg = 'violet'
 
-    button_start= PushButton(master=app, text="Spray & Plunge", grid=[1,11], align='left', command=startprocess, args=[stime, rdelay, pdelay, donotplunge.value==1])
+    button_start= PushButton(master=app, text="Spray & Plunge", grid=[1,11], align='left', command=startprocess, args=[buttons_tracker, stime, rdelay, pdelay, donotplunge.value==1])
     button_start.bg = (255, 50, 50)
     button_start.disable()
 
-    button_up   = PushButton(master=app, text="  Ready  ", grid=[0,11], align='left', command=powerup, args = [[button_start, button_pulse]])
+    button_up   = PushButton(master=app, text="  Ready  ", grid=[0,11], align='left', command=powerup, args = [buttons_tracker, [button_start, button_pulse]])
     button_up.bg="lime green"
 
-    button_down = PushButton(master=app, text="  Abort  ", grid=[3,11], align='left', command=powerdown, args = [[button_start, button_pulse]])
+    button_down = PushButton(master=app, text="  Abort  ", grid=[3,11], align='left', command=powerdown, args = [buttons_tracker, [button_start, button_pulse]])
     button_down.bg = "orange"
         
     # GUI for Cleaning operation
@@ -104,7 +107,7 @@ if __name__=='__main__':
             elif event.edge == NeoTrellis.EDGE_FALLING:
                 if event.number == 0:
                     print("Trellis: Executing #0 power up")
-                    powerup([button_start, button_pulse])
+                    powerup(buttons_tracker, [button_start, button_pulse])
                     trellis.pixels[0] = GREEN
                     ok2plunge = True
                     trellis.pixels[1] = RED
@@ -112,16 +115,16 @@ if __name__=='__main__':
                 elif event.number == 1:
                     if ok2plunge:
                         print("Trellis: Executing #1 spray and plunge")
-                        startprocess(stime, rdelay, pdelay, donotplunge.value==1)
+                        startprocess(buttons_tracker, stime, rdelay, pdelay, donotplunge.value==1)
                         trellis.pixels[1] = RED
                 elif event.number == 2:
                     if ok2plunge:
                         print("Trellis: Executing #2 pulse and plunge")
-                        pulsestartprocess(rdelay, pdelay, pnum, plen, pint, donotplunge.value==1)
+                        pulsestartprocess(buttons_tracker, rdelay, pdelay, pnum, plen, pint, donotplunge.value==1)
                         trellis.pixels[2] = PURPLE
                 elif event.number == 3:
                     print("Trellis: Executing #3 power down")
-                    powerdown([button_start, button_pulse])
+                    powerdown(buttons_tracker, [button_start, button_pulse])
                     trellis.pixels[3] = ORANGE
                     ok2plunge = False
                     trellis.pixels[1] = OFF
@@ -150,7 +153,8 @@ if __name__=='__main__':
             trellis.activate_key(i, NeoTrellis.EDGE_FALLING)
             # set all keys to trigger the blink callback
             trellis.callbacks[i] = pixel_button_action
-            
+        
+        
         def gui_repeating_tasks():
             global trellis, button_start
             trellis.sync()
@@ -165,7 +169,11 @@ if __name__=='__main__':
             else:
                 ok2plunge = False
                 trellis.pixels[1] = OFF
-                trellis.pixels[2] = OFF    
+                trellis.pixels[2] = OFF
+
+            if (buttons_tracker.spray_button_was_pressed() or buttons_tracker.pulse_button_was_pressed()):
+                button_pulse.disable()
+                button_start.disable()
             
         app.repeat(90, gui_repeating_tasks)
 
