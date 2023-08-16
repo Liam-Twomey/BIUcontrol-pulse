@@ -7,9 +7,10 @@ import RPi.GPIO as GPIO
 import BIUpinlist as pin
 from BIU_gui_helper_functions import *
 
-# OPTIONS
-use_neotrellis = True
-# Neotrellis options
+# Change this to True if using Adafruit Neotrellis keypad
+use_neotrellis = False
+
+# importing Adafruit Neotrellis libraries
 if use_neotrellis:
     from board import SCL, SDA
     import busio
@@ -91,7 +92,7 @@ if __name__ == '__main__':
         # set brightness of the trellis
         trellis.brightness = 0.25
 
-        #Define pixel numbers for each trellis button
+        # define pixel numbers for each trellis button
         pixel_num_dict = {'Ready':11, 'SprayPlunge':10, 'PulsePlunge':9, 'Abort':8, 'Clean':3,
                             'DryFire':0}
 
@@ -143,7 +144,6 @@ if __name__ == '__main__':
             trellis.activate_key(i, NeoTrellis.EDGE_FALLING)
             # set all keys to trigger the blink callback
             trellis.callbacks[i] = pixel_button_action
-
 
     def gui_repeating_tasks():
         global button_start
