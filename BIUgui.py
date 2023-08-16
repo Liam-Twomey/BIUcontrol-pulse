@@ -109,6 +109,7 @@ if __name__ == '__main__':
                 if event.number == 0:
                     print("Trellis: Executing #0 power up")
                     powerup(intent_tracker, [button_start, button_pulse])
+                    trellis.pixels[0] = GREEN
                     intent_tracker.set_safe2plunge()
                 elif event.number == 1:
                     if intent_tracker.is_safe2plunge():
