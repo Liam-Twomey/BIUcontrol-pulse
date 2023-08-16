@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 from guizero import App, TextBox, Text, PushButton, CheckBox
-#if Rpi:
+# if Rpi:
 import RPi.GPIO as GPIO
-#import gpio as GPIO
+# import gpio as GPIO
 import BIUpinlist as pin
 from BIU_gui_helper_functions import *
 
@@ -15,50 +15,53 @@ if use_neotrellis:
     import busio
     from adafruit_neotrellis.neotrellis import NeoTrellis
 
+if __name__ == '__main__':
+    intent_tracker = UsersIntentTracker()
 
+    app = App(title="Back-it-up", layout="grid", width=600, height=340)
 
-if __name__=='__main__':
-    buttons_tracker = ButtonsStateTracker()
-    
-    app = App(title="Back-it-up", layout="grid", width = 600, height = 340)
-    
     # GUI for Standard Spray parameters entries
-    stdlabel            = Text(app, text="Standard Spray", color='white', grid=[0,0,2,1], bg = 'dim gray')
-    stimelabel, stime   = text_box(app, 'Spray time (ms):',       position = [0,1], default = 30)
-    rdelaylabel, rdelay = text_box(app, 'Retraction delay (ms):', position = [0,2], default = 50)
-    pdelaylabel, pdelay = text_box(app, 'Plunge delay (ms):',     position = [0,3], default = 50)
+    stdlabel = Text(app, text="Standard Spray", color='white', grid=[0, 0, 2, 1], bg='dim gray')
+    stimelabel, stime = text_box(app, 'Spray time (ms):', position=[0, 1], default=30)
+    rdelaylabel, rdelay = text_box(app, 'Retraction delay (ms):', position=[0, 2], default=50)
+    pdelaylabel, pdelay = text_box(app, 'Plunge delay (ms):', position=[0, 3], default=50)
 
     # GUI for Pulse Spray parameters entries
-    pulselabel  = Text(app, text="(Anti) Pulse Spray", grid=[0,4,2,1], color='white', bg='dim gray')
-    plen_label, plen   = text_box(app, 'Pulse length (ms):',   position = [0,5], default = 16)
-    pnum_label, pnum   = text_box(app, 'Pulse count:',   position = [0,6], default = 5)
-    pint_label, pint   = text_box(app, 'Pulse interval (ms):',   position = [0,7], default = 20)
-    pulsenote            = Text(app, text="(Uses retraction & plunge settings from std.)", grid=[0,8,2,1])
+    pulselabel = Text(app, text="(Anti) Pulse Spray", grid=[0, 4, 2, 1], color='white', bg='dim gray')
+    plen_label, plen = text_box(app, 'Pulse length (ms):', position=[0, 5], default=16)
+    pnum_label, pnum = text_box(app, 'Pulse count:', position=[0, 6], default=5)
+    pint_label, pint = text_box(app, 'Pulse interval (ms):', position=[0, 7], default=20)
+    pulsenote = Text(app, text="(Uses retraction & plunge settings from std.)", grid=[0, 8, 2, 1])
 
     ## Buttons, commands are defined in BIU_gui_helper_functions.py
-    button_title = Text(master=app, text="Triggers", grid=[0,9,4,1], color='white', bg='dim grey')
-    donotplunge = CheckBox(master=app, text="Dry fire (do not plunge)?",   grid=[0,10,2,1], align='left')
+    button_title = Text(master=app, text="Triggers", grid=[0, 9, 4, 1], color='white', bg='dim grey')
+    donotplunge = CheckBox(master=app, text="Dry fire (do not plunge)?", grid=[0, 10, 2, 1], align='left')
 
-    button_pulse= PushButton(master=app, text="Pulse & Plunge", grid=[2,11], align='left', command=pulsestartprocess, args = [buttons_tracker, rdelay, pdelay, pnum, plen, pint, donotplunge.value==1])
+    button_pulse = PushButton(master=app, text="Pulse & Plunge", grid=[2, 11], align='left', command=pulsestartprocess,
+                              args=[intent_tracker, rdelay, pdelay, pnum, plen, pint, donotplunge.value == 1])
     button_pulse.disable()
     button_pulse.bg = 'violet'
 
-    button_start= PushButton(master=app, text="Spray & Plunge", grid=[1,11], align='left', command=startprocess, args=[buttons_tracker, stime, rdelay, pdelay, donotplunge.value==1])
+    button_start = PushButton(master=app, text="Spray & Plunge", grid=[1, 11], align='left', command=startprocess,
+                              args=[intent_tracker, stime, rdelay, pdelay, donotplunge.value == 1])
     button_start.bg = (255, 50, 50)
     button_start.disable()
 
-    button_up   = PushButton(master=app, text="  Ready  ", grid=[0,11], align='left', command=powerup, args = [buttons_tracker, [button_start, button_pulse]])
-    button_up.bg="lime green"
+    button_up = PushButton(master=app, text="  Ready  ", grid=[0, 11], align='left', command=powerup,
+                           args=[intent_tracker, [button_start, button_pulse]])
+    button_up.bg = "lime green"
 
-    button_down = PushButton(master=app, text="  Abort  ", grid=[3,11], align='left', command=powerdown, args = [buttons_tracker, [button_start, button_pulse]])
+    button_down = PushButton(master=app, text="  Abort  ", grid=[3, 11], align='left', command=powerdown,
+                             args=[intent_tracker, [button_start, button_pulse]])
     button_down.bg = "orange"
-        
+
     # GUI for Cleaning operation
-    cleanlabel    = Text(app, text="Cleaning settings:", grid=[2,0,2,1], color='white', bg='dim gray')
-    cleancycleslabel, cleancycles = text_box(app, 'Cleaning cycles:',     position = [2,1], default = 5)
-    cleantimelabel, cleantime = text_box(app, 'Clean pulse length (ms):', position = [2,2], default = 200)
+    cleanlabel = Text(app, text="Cleaning settings:", grid=[2, 0, 2, 1], color='white', bg='dim gray')
+    cleancycleslabel, cleancycles = text_box(app, 'Cleaning cycles:', position=[2, 1], default=5)
+    cleantimelabel, cleantime = text_box(app, 'Clean pulse length (ms):', position=[2, 2], default=200)
     ## Buttons
-    button_clean = PushButton(master = app, text=" Clean ", grid=[2,3,2,1], command=cleanprocess, args = [cleantime, cleancycles])
+    button_clean = PushButton(master=app, text=" Clean ", grid=[2, 3, 2, 1], command=cleanprocess,
+                              args=[cleantime, cleancycles])
     button_clean.bg = "lightblue"
 
     for element in [button_up, button_start, donotplunge, button_down, button_clean, button_pulse]:
@@ -94,12 +97,10 @@ if __name__=='__main__':
         trellis.pixels[4] = BLUE
         trellis.pixels[7] = WHITE
 
-        ok2plunge = False
-
 
         # this will be called when button events are received
         def pixel_button_action(event):
-            global ok2plunge, button_start, button_pulse, stime, rdelay, pdelay, donotplunge, plen, cleantime, cleancycles, pint, pnum
+            global intent_tracker, button_start, button_pulse, stime, rdelay, pdelay, donotplunge, plen, cleantime, cleancycles, pint, pnum
             # turn the LED off when a rising edge is detected
             if event.edge == NeoTrellis.EDGE_RISING:
                 trellis.pixels[event.number] = OFF
@@ -107,28 +108,23 @@ if __name__=='__main__':
             elif event.edge == NeoTrellis.EDGE_FALLING:
                 if event.number == 0:
                     print("Trellis: Executing #0 power up")
-                    powerup(buttons_tracker, [button_start, button_pulse])
-                    trellis.pixels[0] = GREEN
-                    ok2plunge = True
-                    trellis.pixels[1] = RED
-                    trellis.pixels[2] = PURPLE
+                    powerup(intent_tracker, [button_start, button_pulse])
+                    intent_tracker.set_safe2plunge()
                 elif event.number == 1:
-                    if ok2plunge:
+                    if intent_tracker.is_safe2plunge():
                         print("Trellis: Executing #1 spray and plunge")
-                        startprocess(buttons_tracker, stime, rdelay, pdelay, donotplunge.value==1)
-                        trellis.pixels[1] = RED
+                        startprocess(intent_tracker, stime, rdelay, pdelay, donotplunge.value == 1)
+                        intent_tracker.set_not_safe2plunge()
                 elif event.number == 2:
-                    if ok2plunge:
+                    if intent_tracker.is_safe2plunge():
                         print("Trellis: Executing #2 pulse and plunge")
-                        pulsestartprocess(buttons_tracker, rdelay, pdelay, pnum, plen, pint, donotplunge.value==1)
-                        trellis.pixels[2] = PURPLE
+                        pulsestartprocess(intent_tracker, rdelay, pdelay, pnum, plen, pint, donotplunge.value == 1)
+                        intent_tracker.set_not_safe2plunge()
                 elif event.number == 3:
                     print("Trellis: Executing #3 power down")
-                    powerdown(buttons_tracker, [button_start, button_pulse])
+                    powerdown(intent_tracker, [button_start, button_pulse])
                     trellis.pixels[3] = ORANGE
-                    ok2plunge = False
-                    trellis.pixels[1] = OFF
-                    trellis.pixels[2] = OFF
+                    intent_tracker.set_not_safe2plunge()
                 elif event.number == 4:
                     print("Trellis: Executing #4 cleaning")
                     cleanprocess(cleantime, cleancycles)
@@ -137,11 +133,9 @@ if __name__=='__main__':
                     if donotplunge.value == 0:
                         print("Trellis: Executing #7 dry fire")
                         donotplunge.value = 1
-                        trellis.pixels[7] = YELLOW
                     else:
                         print("Trellis: Toggle off #7 dry fire")
                         donotplunge.value = 0
-                        trellis.pixels[7] = WHITE
                 else:
                     print("Trellis: Wrong button pressed")
 
@@ -153,39 +147,41 @@ if __name__=='__main__':
             trellis.activate_key(i, NeoTrellis.EDGE_FALLING)
             # set all keys to trigger the blink callback
             trellis.callbacks[i] = pixel_button_action
-        
-        
-        def gui_repeating_tasks():
-            global trellis, button_start
+
+
+    def gui_repeating_tasks():
+        global button_start
+        if use_neotrellis:
+            global trellis
             trellis.sync()
-            if donotplunge.value==1:
+            if donotplunge.value == 1:
                 trellis.pixels[7] = YELLOW
             else:
                 trellis.pixels[7] = WHITE
-            if button_start.enabled:
-                ok2plunge = True
+        if intent_tracker.is_safe2plunge():
+            if use_neotrellis:
                 trellis.pixels[1] = RED
                 trellis.pixels[2] = PURPLE
-            else:
-                ok2plunge = False
+            button_pulse.enable()
+            button_start.enable()
+        else:
+            if use_neotrellis:
                 trellis.pixels[1] = OFF
                 trellis.pixels[2] = OFF
+            button_pulse.disable()
+            button_start.disable()
 
-            if (buttons_tracker.spray_button_was_pressed() or buttons_tracker.pulse_button_was_pressed()):
-                button_pulse.disable()
-                button_start.disable()
-            
-        app.repeat(90, gui_repeating_tasks)
+
+    app.repeat(90, gui_repeating_tasks)
 
     app.display()
 
-    #shutdown
+    # shutdown
     print('BIU program shutting down...')
-    
-    for i in [0, 1, 2, 3, 4, 7]: 
-        trellis.pixels[i] = OFF
+
+    if use_neotrellis:
+        for i in [0, 1, 2, 3, 4, 7]:
+            trellis.pixels[i] = OFF
 
     powerdown([button_start, button_pulse])
     # GPIO.cleanup()
-    
-
