@@ -10,7 +10,7 @@ from BIU_gui_helper_functions import *
 # Change this to True if using Adafruit Neotrellis keypad
 use_neotrellis = False
 
-# importing Adafruit Neotrellis libraries
+# Importing Adafruit Neotrellis libraries
 if use_neotrellis:
     from board import SCL, SDA
     import busio
@@ -145,18 +145,25 @@ if __name__ == '__main__':
             # set all keys to trigger the blink callback
             trellis.callbacks[i] = pixel_button_action
 
+
+    prior_donotplunge_val = donotplunge.value
+
     def gui_repeating_tasks():
-        global button_start
+        global button_start, prior_donotplunge_val
+
+        if prior_donotplunge_val != donotplunge.value:
+            if donotplunge.value == 1:
+                print("Toggle ON dry fire")
+            else:
+            print("Toggle OFF dry fire")
+        prior_donotplunge_val = donotplunge.value
+
         if use_neotrellis:
             global trellis
             trellis.sync()
             if donotplunge.value == 1:
-                if trellis.pixels[pixel_num_dict['DryFire']] == WHITE:
-                    print ("Toggle ON dry fire")
                 trellis.pixels[pixel_num_dict['DryFire']] = YELLOW
             else:
-                if trellis.pixels[pixel_num_dict['DryFire']] == YELLOW:
-                    print ("Toggle OFF dry fire")
                 trellis.pixels[pixel_num_dict['DryFire']] = WHITE
         if progress_tracker.is_safe2plunge():
             if use_neotrellis:
