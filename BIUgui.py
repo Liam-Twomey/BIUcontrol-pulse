@@ -111,34 +111,29 @@ if __name__ == '__main__':
             # turn the LED off when a rising edge is detected
             elif event.edge == NeoTrellis.EDGE_FALLING:
                 if event.number == pixel_num_dict['Ready']:
-                    print("Trellis: Executing #0 power up")
                     powerup(progress_tracker, [button_start, button_pulse])
                     trellis.pixels[pixel_num_dict['Ready']] = GREEN
                 elif event.number == pixel_num_dict['SprayPlunge']:
                     if progress_tracker.is_safe2plunge():
-                        print("Trellis: Executing #1 spray and plunge")
                         startprocess(progress_tracker, stime, rdelay, pdelay, donotplunge.value == 1)
                 elif event.number == pixel_num_dict['PulsePlunge']:
                     if progress_tracker.is_safe2plunge():
-                        print("Trellis: Executing #2 pulse and plunge")
                         pulsestartprocess(progress_tracker, rdelay, pdelay, pnum, plen, pint, donotplunge.value == 1)
                 elif event.number == pixel_num_dict['Abort']:
-                    print("Trellis: Executing #3 power down")
                     powerdown(progress_tracker, [button_start, button_pulse])
                     trellis.pixels[pixel_num_dict['Abort']] = ORANGE
                 elif event.number == pixel_num_dict['Clean']:
-                    print("Trellis: Executing #4 cleaning")
                     cleanprocess(cleantime, cleancycles)
                     trellis.pixels[pixel_num_dict['Clean']] = BLUE
                 elif event.number == pixel_num_dict['DryFire']:
                     if donotplunge.value == 0:
-                        print("Trellis: Executing #7 dry fire")
+                        print("Toggle ON dry fire")
                         donotplunge.value = 1
                     else:
-                        print("Trellis: Toggle off #7 dry fire")
+                        print("Toggle OFF dry fire")
                         donotplunge.value = 0
                 else:
-                    print("Trellis: Wrong button pressed")
+                    print("Wrong button pressed")
 
 
         for i in pixel_num_dict.values():
@@ -156,8 +151,12 @@ if __name__ == '__main__':
             global trellis
             trellis.sync()
             if donotplunge.value == 1:
+                if trellis.pixels[pixel_num_dict['DryFire']] == WHITE:
+                    print ("Toggle ON dry fire")
                 trellis.pixels[pixel_num_dict['DryFire']] = YELLOW
             else:
+                if trellis.pixels[pixel_num_dict['DryFire']] == YELLOW:
+                    print ("Toggle OFF dry fire")
                 trellis.pixels[pixel_num_dict['DryFire']] = WHITE
         if progress_tracker.is_safe2plunge():
             if use_neotrellis:

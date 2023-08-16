@@ -32,19 +32,16 @@ def startprocess(users_progress, stime, rdelay, pdelay, is_dry_fire: bool):
     '''
     users_progress.set_not_safe2plunge()
 
-    print("Starting continuous spray process.")
+    print("Executing spray and plunge")
     spraytime = str(float(stime.value) / 1000)
     retractiondelay = str(float(rdelay.value) / 1000)
     plungedelay = str(float(pdelay.value) / 1000)
-    print('Starting A&P')
     arguments = ["python3", "BIUapplyandplunge.py", "--stime", spraytime, "--rdelay", retractiondelay, "--pdelay",
                  plungedelay]
 
     if is_dry_fire:
         arguments.append("--donotplunge")
     Popen(arguments)
-
-    print("A&P finished.")
 
 
 def pulsestartprocess(users_progress, rdelay, pdelay, pnum, plen, pinterval, is_dry_fire: bool):
@@ -58,7 +55,7 @@ def pulsestartprocess(users_progress, rdelay, pdelay, pnum, plen, pinterval, is_
     '''
     users_progress.set_not_safe2plunge()
 
-    print("Starting pulse spray.")
+    print("Executing pulse and plunge")
     retractiondelay = str(float(rdelay.value) / 1000)
     plungedelay = str(float(pdelay.value) / 1000)
     pulselength = str(float(plen.value) / 1000)
@@ -77,12 +74,10 @@ def powerup(users_progress, tobe_enabled_buttons_list):
     :param tobe_enabled_buttons_list: list of guizero.PushButton objects to be enabled
     :return: void
     '''
+
     users_progress.set_safe2plunge()
 
-    spray_button_pressed = False
-    pulse_button_pressed = False
-
-    print("Power up")
+    print("Executing power up")
     arguments = ["python3", "BIUpowerupdown.py", "--updown", "up"]
     call(arguments)
     try:
@@ -99,7 +94,8 @@ def powerdown(users_progress, tobe_disabled_buttons_list):
     :return: void
     '''
     users_progress.set_not_safe2plunge()
-    print("Power down")
+
+    print("Executing power down")
     arguments = ["python3", "BIUpowerupdown.py", "--updown", "down"]
     Popen(arguments)
     try:
@@ -116,7 +112,8 @@ def cleanprocess(cleantime, cleancycles):
     :param cleancycles: number of cleaning cycles
     :return: void
     '''
-    print("Starting clean process")
+    
+    print("Executing cleaning")
     spraytime = str(float(cleantime.value) / 1000)
     cycles = cleancycles.value
     arguments = ["python3", "BIUclean.py", "--stime", spraytime, "--cycles", cycles]
