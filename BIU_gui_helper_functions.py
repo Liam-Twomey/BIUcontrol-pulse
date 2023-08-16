@@ -25,14 +25,14 @@ def text_box(app, disp: str, position: list, default):
 #         print("Pedal triggered")
 #         startprocess()
 
-def startprocess(users_intent, stime, rdelay, pdelay, is_dry_fire: bool):
+def startprocess(users_progress, stime, rdelay, pdelay, is_dry_fire: bool):
     '''
     This function takes in spraytime, retraction delay, and plunge delay to run BIUA&P in the system command line.
     :return: void
     '''
-    users_intent.set_not_safe2plunge()
+    users_progress.set_not_safe2plunge()
 
-    print("Starting continous spray process.")
+    print("Starting continuous spray process.")
     spraytime = str(float(stime.value) / 1000)
     retractiondelay = str(float(rdelay.value) / 1000)
     plungedelay = str(float(pdelay.value) / 1000)
@@ -47,7 +47,7 @@ def startprocess(users_intent, stime, rdelay, pdelay, is_dry_fire: bool):
     print("A&P finished.")
 
 
-def pulsestartprocess(users_intent, rdelay, pdelay, pnum, plen, pinterval, is_dry_fire: bool):
+def pulsestartprocess(users_progress, rdelay, pdelay, pnum, plen, pinterval, is_dry_fire: bool):
     '''
     This function takes in retraction delay, plunge delay, and pulse length to run BIUA&P in the system command line.
     :param rdelay: retraction delay
@@ -56,7 +56,7 @@ def pulsestartprocess(users_intent, rdelay, pdelay, pnum, plen, pinterval, is_dr
     :param is_dry_fire: boolean to determine whether to plunge or not
     :return: void
     '''
-    users_intent.set_not_safe2plunge()
+    users_progress.set_not_safe2plunge()
 
     print("Starting pulse spray.")
     retractiondelay = str(float(rdelay.value) / 1000)
@@ -71,13 +71,13 @@ def pulsestartprocess(users_intent, rdelay, pdelay, pnum, plen, pinterval, is_dr
     Popen(arguments)
 
 
-def powerup(users_intent, tobe_enabled_buttons_list):
+def powerup(users_progress, tobe_enabled_buttons_list):
     '''
     This function runs BIUpowerupdown.py in the system command line and then takes in a list of buttons to be enabled.
     :param tobe_enabled_buttons_list: list of guizero.PushButton objects to be enabled
     :return: void
     '''
-    users_intent.set_safe2plunge()
+    users_progress.set_safe2plunge()
 
     spray_button_pressed = False
     pulse_button_pressed = False
@@ -92,13 +92,13 @@ def powerup(users_intent, tobe_enabled_buttons_list):
         return
 
 
-def powerdown(users_intent, tobe_disabled_buttons_list):
+def powerdown(users_progress, tobe_disabled_buttons_list):
     '''
     This function runs BIUpowerupdown.py in the system command line and then takes in a list of buttons to be disabled.
     :param tobe_disabled_buttons_list: list of guizero.PushButton objects to be disabled
     :return: void
     '''
-    users_intent.set_not_safe2plunge()
+    users_progress.set_not_safe2plunge()
     print("Power down")
     arguments = ["python3", "BIUpowerupdown.py", "--updown", "down"]
     Popen(arguments)
@@ -126,7 +126,7 @@ def cleanprocess(cleantime, cleancycles):
     # call(["python3","cleancontrol.py","--stime",stime,"--cycles",cycles])
 
 
-class UsersIntentTracker:
+class UserProgressTracker:
 
     def __init__(self):
         self.safe_to_plunge = False

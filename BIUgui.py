@@ -16,7 +16,7 @@ if use_neotrellis:
     from adafruit_neotrellis.neotrellis import NeoTrellis
 
 if __name__ == '__main__':
-    intent_tracker = UsersIntentTracker()
+    progress_tracker = UserProgressTracker()
 
     app = App(title="Back-it-up", layout="grid", width=600, height=340)
 
@@ -38,21 +38,21 @@ if __name__ == '__main__':
     donotplunge = CheckBox(master=app, text="Dry fire (do not plunge)?", grid=[0, 10, 2, 1], align='left')
 
     button_pulse = PushButton(master=app, text="Pulse & Plunge", grid=[2, 11], align='left', command=pulsestartprocess,
-                              args=[intent_tracker, rdelay, pdelay, pnum, plen, pint, donotplunge.value == 1])
+                              args=[progress_tracker, rdelay, pdelay, pnum, plen, pint, donotplunge.value == 1])
     button_pulse.disable()
     button_pulse.bg = 'violet'
 
     button_start = PushButton(master=app, text="Spray & Plunge", grid=[1, 11], align='left', command=startprocess,
-                              args=[intent_tracker, stime, rdelay, pdelay, donotplunge.value == 1])
+                              args=[progress_tracker, stime, rdelay, pdelay, donotplunge.value == 1])
     button_start.bg = (255, 50, 50)
     button_start.disable()
 
     button_up = PushButton(master=app, text="  Ready  ", grid=[0, 11], align='left', command=powerup,
-                           args=[intent_tracker, [button_start, button_pulse]])
+                           args=[progress_tracker, [button_start, button_pulse]])
     button_up.bg = "lime green"
 
     button_down = PushButton(master=app, text="  Abort  ", grid=[3, 11], align='left', command=powerdown,
-                             args=[intent_tracker, [button_start, button_pulse]])
+                             args=[progress_tracker, [button_start, button_pulse]])
     button_down.bg = "orange"
 
     # GUI for Cleaning operation
@@ -104,7 +104,7 @@ if __name__ == '__main__':
 
         # this will be called when button events are received
         def pixel_button_action(event):
-            global intent_tracker, button_start, button_pulse, stime, rdelay, pdelay, donotplunge, plen, cleantime, cleancycles, pint, pnum
+            global progress_tracker, button_start, button_pulse, stime, rdelay, pdelay, donotplunge, plen, cleantime, cleancycles, pint, pnum
             # turn the LED off when a rising edge is detected
             if event.edge == NeoTrellis.EDGE_RISING:
                 trellis.pixels[event.number] = OFF
@@ -112,24 +112,20 @@ if __name__ == '__main__':
             elif event.edge == NeoTrellis.EDGE_FALLING:
                 if event.number == pixel_num_dict['Ready']:
                     print("Trellis: Executing #0 power up")
-                    powerup(intent_tracker, [button_start, button_pulse])
+                    powerup(progress_tracker, [button_start, button_pulse])
                     trellis.pixels[pixel_num_dict['Ready']] = GREEN
-                    intent_tracker.set_safe2plunge()
                 elif event.number == pixel_num_dict['SprayPlunge']:
-                    if intent_tracker.is_safe2plunge():
+                    if progress_tracker.is_safe2plunge():
                         print("Trellis: Executing #1 spray and plunge")
-                        startprocess(intent_tracker, stime, rdelay, pdelay, donotplunge.value == 1)
-                        intent_tracker.set_not_safe2plunge()
+                        startprocess(progress_tracker, stime, rdelay, pdelay, donotplunge.value == 1)
                 elif event.number == pixel_num_dict['PulsePlunge']:
-                    if intent_tracker.is_safe2plunge():
+                    if progress_tracker.is_safe2plunge():
                         print("Trellis: Executing #2 pulse and plunge")
-                        pulsestartprocess(intent_tracker, rdelay, pdelay, pnum, plen, pint, donotplunge.value == 1)
-                        intent_tracker.set_not_safe2plunge()
+                        pulsestartprocess(progress_tracker, rdelay, pdelay, pnum, plen, pint, donotplunge.value == 1)
                 elif event.number == pixel_num_dict['Abort']:
                     print("Trellis: Executing #3 power down")
-                    powerdown(intent_tracker, [button_start, button_pulse])
+                    powerdown(progress_tracker, [button_start, button_pulse])
                     trellis.pixels[pixel_num_dict['Abort']] = ORANGE
-                    intent_tracker.set_not_safe2plunge()
                 elif event.number == pixel_num_dict['Clean']:
                     print("Trellis: Executing #4 cleaning")
                     cleanprocess(cleantime, cleancycles)
@@ -163,7 +159,7 @@ if __name__ == '__main__':
                 trellis.pixels[pixel_num_dict['DryFire']] = YELLOW
             else:
                 trellis.pixels[pixel_num_dict['DryFire']] = WHITE
-        if intent_tracker.is_safe2plunge():
+        if progress_tracker.is_safe2plunge():
             if use_neotrellis:
                 trellis.pixels[pixel_num_dict['SprayPlunge']] = RED
                 trellis.pixels[pixel_num_dict['PulsePlunge']] = PURPLE
