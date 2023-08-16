@@ -8,7 +8,7 @@ import BIUpinlist as pin
 from BIU_gui_helper_functions import *
 
 # Change this to True if using Adafruit Neotrellis keypad
-use_neotrellis = False
+use_neotrellis = True
 
 # Importing Adafruit Neotrellis libraries
 if use_neotrellis:
@@ -128,10 +128,8 @@ if __name__ == '__main__':
                     trellis.pixels[pixel_num_dict['Clean']] = BLUE
                 elif event.number == pixel_num_dict['DryFire']:
                     if donotplunge.value == 0:
-                        print("Toggle ON dry fire")
                         donotplunge.value = 1
                     else:
-                        print("Toggle OFF dry fire")
                         donotplunge.value = 0
                 else:
                     print("Wrong button pressed")
@@ -155,7 +153,7 @@ if __name__ == '__main__':
             if donotplunge.value == 1:
                 print("Toggle ON dry fire")
             else:
-            print("Toggle OFF dry fire")
+                print("Toggle OFF dry fire")
         prior_donotplunge_val = donotplunge.value
 
         if use_neotrellis:
