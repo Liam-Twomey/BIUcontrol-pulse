@@ -8,7 +8,7 @@ import BIUpinlist as pin
 from BIU_gui_helper_functions import *
 
 # Change this to True if using Adafruit Neotrellis keypad
-use_neotrellis = True
+use_neotrellis = False
 
 # Importing Adafruit Neotrellis libraries
 if use_neotrellis:
@@ -71,6 +71,9 @@ if __name__ == '__main__':
     # GPIO.setwarnings(False)
     # GPIO.setmode(GPIO.BCM)
     # app.repeat(100,pedal)
+
+    
+    # Neotrellis code integration begins here
 
     if use_neotrellis:
         # create the i2c object for the trellis
