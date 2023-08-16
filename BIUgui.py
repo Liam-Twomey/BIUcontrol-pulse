@@ -89,11 +89,11 @@ if __name__ == '__main__':
         YELLOW = (200, 200, 0)
 
         # set brightness of the trellis
-        trellis.brightness = 0.5
+        trellis.brightness = 0.25
 
         #Define pixel numbers for each trellis button
-        pixel_num_dict = {'Ready':0, 'SprayPlunge':1, 'PulsePlunge':2, 'Abort':3, 'Clean':4,
-                            'DryFire':7}
+        pixel_num_dict = {'Ready':11, 'SprayPlunge':10, 'PulsePlunge':9, 'Abort':8, 'Clean':3,
+                            'DryFire':0}
 
         # set colors for each pixel button
         trellis.pixels[pixel_num_dict['Ready']] = GREEN
@@ -110,7 +110,7 @@ if __name__ == '__main__':
                 trellis.pixels[event.number] = OFF
             # turn the LED off when a rising edge is detected
             elif event.edge == NeoTrellis.EDGE_FALLING:
-                if event.number == pixel_num_dict['Ready']
+                if event.number == pixel_num_dict['Ready']:
                     print("Trellis: Executing #0 power up")
                     powerup(intent_tracker, [button_start, button_pulse])
                     trellis.pixels[pixel_num_dict['Ready']] = GREEN
@@ -134,7 +134,7 @@ if __name__ == '__main__':
                     print("Trellis: Executing #4 cleaning")
                     cleanprocess(cleantime, cleancycles)
                     trellis.pixels[pixel_num_dict['Clean']] = BLUE
-                elif event.number == pixel_num_dict['DryFire']
+                elif event.number == pixel_num_dict['DryFire']:
                     if donotplunge.value == 0:
                         print("Trellis: Executing #7 dry fire")
                         donotplunge.value = 1
