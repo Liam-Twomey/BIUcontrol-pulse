@@ -2,13 +2,14 @@
 
 from guizero import App, TextBox, Text, PushButton, CheckBox
 #if Rpi:
-import RPi.GPIO as GPIO
-#import gpio as GPIO
+##import RPi.GPIO as GPIO
+#if PC:
+import gpio as GPIO
 import BIUpinlist as pin
 from BIU_gui_helper_functions import *
 
 # OPTIONS
-use_neotrellis = True
+use_neotrellis = False#True
 # Neotrellis options
 if use_neotrellis:
     from board import SCL, SDA
