@@ -23,25 +23,27 @@ def text_box(app, disp:str, position:list, default):
 #         print("Pedal triggered")
 #         startprocess()
 
-def startprocess(stime, rdelay, pdelay, is_dry_fire:bool):
+def startprocess(users_progress, rdelay, pdelay, is_dry_fire:bool):
     '''
     This function takes in spraytime, retraction delay, and plunge delay to run BIUA&P in the system command line.
     :return: void
     '''
-    print("Starting continous spray process.")
-    spraytime        = str(float(stime.value)/1000)
-    retractiondelay  = str(float(rdelay.value)/1000)
-    plungedelay      = str(float(pdelay.value)/1000)
-    print('Starting A&P')
-    arguments = ["python3","BIUapplyandplunge.py","--stime",spraytime,"--rdelay",retractiondelay,"--pdelay",plungedelay]
-    button_start.disable()
+    users_progress.set_not_safe2plunge()
+
+    print("Executing spray and plunge")
+    spraytime = str(float(stime.value) / 1000)
+    retractiondelay = str(float(rdelay.value) / 1000)
+    plungedelay = str(float(pdelay.value) / 1000)
+    arguments = ["python3", "BIUapplyandplunge.py", "--stime", spraytime, "--rdelay", retractiondelay, "--pdelay",
+                 plungedelay]
+
     if is_dry_fire:
         arguments.append("--donotplunge")
-    call(arguments)
+    Popen(arguments)
 
     print("A&P finished.")
 
-def pulsestartprocess(rdelay, pdelay, pnum, plen, pinterval, is_dry_fire):
+def pulsestartprocess(users_progress, pdelay, pnum, plen, pinterval, is_dry_fire):
     '''
     This function takes in retraction delay, plunge delay, and pulse length to run BIUA&P in the system command line.
     :param rdelay: retraction delay
@@ -50,26 +52,30 @@ def pulsestartprocess(rdelay, pdelay, pnum, plen, pinterval, is_dry_fire):
     :param is_dry_fire: boolean to determine whether to plunge or not
     :return: void
     '''
-    print("Starting pulse spray.")
-    retractiondelay  = str(float(rdelay.value)/1000)
-    plungedelay      = str(float(pdelay.value)/1000)
-    pulselength      = str(float(plen.value)/1000)
-    breaktime        = str(float(pinterval.value)/1000)
-    arguments = ["python3","BIUapplyandplunge.py","--pulse","--pcycles",pnum.value,"--stime",pulselength, "--breaktime", breaktime, "--rdelay",retractiondelay,"--pdelay",plungedelay]
-    button_pulse.disable()
+    users_progress.set_not_safe2plunge()
+
+    print("Executing pulse and plunge")
+    retractiondelay = str(float(rdelay.value) / 1000)
+    plungedelay = str(float(pdelay.value) / 1000)
+    pulselength = str(float(plen.value) / 1000)
+    breaktime = str(float(pinterval.value) / 1000)
+    arguments = ["python3", "BIUapplyandplunge.py", "--pulse", "--pcycles", pnum.value, "--stime", pulselength,
+                 "--breaktime", breaktime, "--rdelay", retractiondelay, "--pdelay", plungedelay]
     if (is_dry_fire):
         arguments.append("--donotplunge")
-    call(arguments)
+    Popen(arguments)
     
 
-def powerup(tobe_enabled_buttons_list):
+def powerup(users_progress, tobe_enabled_buttons_list):
     '''
     This function runs BIUpowerupdown.py in the system command line and then takes in a list of buttons to be enabled.
     :param tobe_enabled_buttons_list: list of guizero.PushButton objects to be enabled
     :return: void
     '''
-    print("Power up")
-    arguments = ["python3","BIUpowerupdown.py","--updown","up"]
+    users_progress.set_safe2plunge()
+
+    print("Executing power up")
+    arguments = ["python3", "BIUpowerupdown.py", "--updown", "up"]
     call(arguments)
     try:
         for button in tobe_enabled_buttons_list:
@@ -77,15 +83,17 @@ def powerup(tobe_enabled_buttons_list):
     except:
         return
     
-def powerdown(tobe_disabled_buttons_list):
+def powerdown(users_progress, tobe_disabled_buttons_list):
     '''
     This function runs BIUpowerupdown.py in the system command line and then takes in a list of buttons to be disabled.
     :param tobe_disabled_buttons_list: list of guizero.PushButton objects to be disabled
     :return: void
     '''
-    print("Power down")
-    arguments = ["python3","BIUpowerupdown.py","--updown","down"]
-    call(arguments)
+    users_progress.set_not_safe2plunge()
+
+    print("Executing power down")
+    arguments = ["python3", "BIUpowerupdown.py", "--updown", "down"]
+    Popen(arguments)
     try:
         for button in tobe_disabled_buttons_list:
             button.disable()
@@ -99,11 +107,25 @@ def cleanprocess(cleantime, cleancycles):
     :param cleancycles: number of cleaning cycles
     :return: void
     '''
-    print("Starting clean process")
-    spraytime  = str(float(cleantime.value)/1000)
+    print("Executing cleaning")
+    spraytime = str(float(cleantime.value) / 1000)
     cycles = cleancycles.value
-    arguments = ["python3","BIUclean.py","--stime",spraytime,"--cycles",cycles]
-    #print(arguments)
-    #call(arguments)
+    arguments = ["python3", "BIUclean.py", "--stime", spraytime, "--cycles", cycles]
+    # print(arguments)
+    # call(arguments)
     Popen(arguments)
-    #call(["python3","cleancontrol.py","--stime",stime,"--cycles",cycles])
+    # call(["python3","cleancontrol.py","--stime",stime,"--cycles",cycles])
+
+class UserProgressTracker:
+
+    def __init__(self):
+        self.safe_to_plunge = False
+
+    def is_safe2plunge(self):
+        return self.safe_to_plunge
+
+    def set_safe2plunge(self):
+        self.safe_to_plunge = True
+
+    def set_not_safe2plunge(self):
+        self.safe_to_plunge = False
