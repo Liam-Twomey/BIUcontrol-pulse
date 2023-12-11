@@ -79,7 +79,6 @@ def resetplunger(plunger):
 ''' 
 
 if __name__=='__main__':
-    print('Starting BIUapplyandplunge.py')
     #Read flags from CLI input, store in args
     parser = argparse.ArgumentParser(description='Arguments for BIUcontrol')
     parser.add_argument('--stime',      help='Duration of sample application or pulse (seconds)',type=float,required=True)
@@ -157,5 +156,5 @@ if __name__=='__main__':
     powerdownsensors(pin.sensorpower)
 
     #GPIO.cleanup()
-    print("BIUapplyandplunge.py finished.")
+    print("Done!")
 

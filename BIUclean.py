@@ -4,7 +4,6 @@ import time, argparse
 import BIUpinlist as pin
 
 if __name__=='__main__':
-    print("Start cleaning")
 
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
@@ -20,6 +19,5 @@ if __name__=='__main__':
         time.sleep(args.stime)
         GPIO.output(pin.cannon,GPIO.LOW)
         time.sleep(0.2)
-
-    print("Cleaning complete")
+    
 GPIO.cleanup()
