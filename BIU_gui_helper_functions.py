@@ -1,5 +1,6 @@
 from guizero import App, TextBox, Text, PushButton, CheckBox
 from subprocess import call, Popen
+from path import Path
 
 def text_box(app, disp:str, position:list, default):
     '''
@@ -34,7 +35,7 @@ def startprocess(users_progress, rdelay, pdelay, is_dry_fire:bool):
     spraytime = str(float(stime.value) / 1000)
     retractiondelay = str(float(rdelay.value) / 1000)
     plungedelay = str(float(pdelay.value) / 1000)
-    arguments = ["python3", "BIUapplyandplunge.py", "--stime", spraytime, "--rdelay", retractiondelay, "--pdelay",
+    arguments = ["python3", Path("./BIUapplyandplunge.py"), "--stime", spraytime, "--rdelay", retractiondelay, "--pdelay",
                  plungedelay]
 
     if is_dry_fire:
@@ -59,7 +60,7 @@ def pulsestartprocess(users_progress, pdelay, pnum, plen, pinterval, is_dry_fire
     plungedelay = str(float(pdelay.value) / 1000)
     pulselength = str(float(plen.value) / 1000)
     breaktime = str(float(pinterval.value) / 1000)
-    arguments = ["python3", "BIUapplyandplunge.py", "--pulse", "--pcycles", pnum.value, "--stime", pulselength,
+    arguments = ["python3", Path("./BIUapplyandplunge.py"), "--pulse", "--pcycles", pnum.value, "--stime", pulselength,
                  "--breaktime", breaktime, "--rdelay", retractiondelay, "--pdelay", plungedelay]
     if (is_dry_fire):
         arguments.append("--donotplunge")
@@ -75,8 +76,8 @@ def powerup(users_progress, tobe_enabled_buttons_list):
     users_progress.set_safe2plunge()
 
     print("Executing power up")
-    arguments = ["python3", "BIUpowerupdown.py", "--updown", "up"]
-    call(arguments)
+    arguments = ["python3", Path(".\BIUpowerupdown.py"), "--updown", "up"]
+    Popen(arguments)
     try:
         for button in tobe_enabled_buttons_list:
             button.enable()
@@ -92,7 +93,7 @@ def powerdown(users_progress, tobe_disabled_buttons_list):
     users_progress.set_not_safe2plunge()
 
     print("Executing power down")
-    arguments = ["python3", "BIUpowerupdown.py", "--updown", "down"]
+    arguments = ["python3", Path(".\BIUpowerupdown.py"), "--updown", "down"]
     Popen(arguments)
     try:
         for button in tobe_disabled_buttons_list:
@@ -110,7 +111,7 @@ def cleanprocess(cleantime, cleancycles):
     print("Executing cleaning")
     spraytime = str(float(cleantime.value) / 1000)
     cycles = cleancycles.value
-    arguments = ["python3", "BIUclean.py", "--stime", spraytime, "--cycles", cycles]
+    arguments = ["python3", Path(".\BIUclean.py"), "--stime", spraytime, "--cycles", cycles]
     # print(arguments)
     # call(arguments)
     Popen(arguments)
