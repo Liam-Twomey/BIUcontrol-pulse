@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
 # Uncomment for use of pi
-import RPi.GPIO as GPIO
-#import gpio as GPIO
+try:
+    import RPi.GPIO as GPIO
+except:
+    import gpio as GPIO
 import time, threading
 import argparse
 import sys, select

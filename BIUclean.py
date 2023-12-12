@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-import RPi.GPIO as GPIO
+try:
+    import RPi.GPIO as GPIO
+except:
+    import gpio as GPIO
 import time, argparse
 import BIUpinlist as pin
 
 if __name__=='__main__':
-    print("Starting cleaning.")
+    print("Starting cl1eaning.")
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(pin.cannon,GPIO.OUT)

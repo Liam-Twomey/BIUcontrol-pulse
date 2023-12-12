@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 from guizero import App, TextBox, Text, PushButton, CheckBox
-#if Rpi:
-##import RPi.GPIO as GPIO
-#if PC:
-import gpio as GPIO
+try: # for RPi
+    import RPi.GPIO as GPIO
+except: #if PC:
+    import gpio as GPIO
 import BIUpinlist as pin
 from BIU_gui_helper_functions import *
 
@@ -38,11 +38,11 @@ if __name__=='__main__':
     button_title = Text(master=app, text="Triggers", grid=[0,9,4,1], color='white', bg='dim grey')
     donotplunge = CheckBox(master=app, text="Dry fire (do not plunge)?",   grid=[0,10,2,1], align='left')
 
-    button_pulse= PushButton(master=app, text="Pulse & Plunge", grid=[2,11], align='left', command=pulsestartprocess, args = [rdelay, pdelay, pnum, plen, pint, donotplunge.value==1])
+    button_pulse= PushButton(master=app, text="Pulse & Plunge", grid=[2,11], align='left', command=pulsestartprocess, args = [stateTracker,[rdelay, pdelay, pnum, plen, pint, donotplunge.value==1]])
     button_pulse.disable()
     button_pulse.bg = 'violet'
 
-    button_start= PushButton(master=app, text="Spray & Plunge", grid=[1,11], align='left', command=startprocess, args=[stateTracker,[stime, rdelay, pdelay], donotplunge.value==1])
+    button_start= PushButton(master=app, text="Spray & Plunge", grid=[1,11], align='left', command=startprocess, args=[stateTracker,[stime, rdelay, pdelay, donotplunge.value==1]])
     button_start.bg = (255, 50, 50)
     button_start.disable()
 
@@ -180,6 +180,6 @@ if __name__=='__main__':
             trellis.pixels[i] = OFF
 
     powerdown(stateTracker,[button_start, button_pulse])
-    # GPIO.cleanup()
+    GPIO.cleanup()
     
 

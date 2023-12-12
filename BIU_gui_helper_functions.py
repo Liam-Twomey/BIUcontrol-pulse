@@ -76,7 +76,7 @@ def powerup(users_progress, tobe_enabled_buttons_list):
     users_progress.set_safe2plunge()
 
     print("Executing power up")
-    arguments = ["python3", Path(".\BIUpowerupdown.py"), "--updown", "up"]
+    arguments = ["python3", Path("./BIUpowerupdown.py"), "--updown", "up"]
     Popen(arguments)
     try:
         for button in tobe_enabled_buttons_list:
@@ -93,7 +93,7 @@ def powerdown(users_progress, tobe_disabled_buttons_list):
     users_progress.set_not_safe2plunge()
 
     print("Executing power down")
-    arguments = ["python3", Path(".\BIUpowerupdown.py"), "--updown", "down"]
+    arguments = ["python3", Path("./BIUpowerupdown.py"), "--updown", "down"]
     Popen(arguments)
     try:
         for button in tobe_disabled_buttons_list:
@@ -111,7 +111,7 @@ def cleanprocess(cleantime, cleancycles):
     print("Executing cleaning")
     spraytime = str(float(cleantime.value) / 1000)
     cycles = cleancycles.value
-    arguments = ["python3", Path(".\BIUclean.py"), "--stime", spraytime, "--cycles", cycles]
+    arguments = ["python3", Path("./BIUclean.py"), "--stime", spraytime, "--cycles", cycles]
     # print(arguments)
     # call(arguments)
     Popen(arguments)
