@@ -46,10 +46,10 @@ if __name__=='__main__':
     button_start.bg = (255, 50, 50)
     button_start.disable()
 
-    button_up   = PushButton(master=app, text="  Ready  ", grid=[0,11], align='left', command=powerup, args = [stateTracker,button_start, button_pulse]])
+    button_up   = PushButton(master=app, text="  Ready  ", grid=[0,11], align='left', command=powerup, args = [stateTracker,[button_start, button_pulse]])
     button_up.bg="lime green"
 
-    button_down = PushButton(master=app, text="  Abort  ", grid=[3,11], align='left', command=powerdown, args = [stateTracker,button_start, button_pulse]])
+    button_down = PushButton(master=app, text="  Abort  ", grid=[3,11], align='left', command=powerdown, args = [stateTracker,[button_start, button_pulse]])
     button_down.bg = "orange"
         
     # GUI for Cleaning operation
