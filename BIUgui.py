@@ -38,18 +38,18 @@ if __name__=='__main__':
     button_title = Text(master=app, text="Triggers", grid=[0,9,4,1], color='white', bg='dim grey')
     donotplunge = CheckBox(master=app, text="Dry fire (do not plunge)?",   grid=[0,10,2,1], align='left')
 
-    button_pulse= PushButton(master=app, text="Pulse & Plunge", grid=[2,11], align='left', command=pulsestartprocess, args = [stateTracker,[rdelay, pdelay, pnum, plen, pint, donotplunge.value==1]])
+    button_pulse= PushButton(master=app, text="Pulse & Plunge", grid=[2,11], align='left', command=pulsestartprocess, args = [stateTracker,rdelay, pdelay, pnum, plen, pint, donotplunge.value==1])
     button_pulse.disable()
     button_pulse.bg = 'violet'
 
-    button_start= PushButton(master=app, text="Spray & Plunge", grid=[1,11], align='left', command=startprocess, args=[stateTracker,[stime, rdelay, pdelay, donotplunge.value==1]])
+    button_start= PushButton(master=app, text="Spray & Plunge", grid=[1,11], align='left', command=startprocess, args=[stateTracker,stime, rdelay, pdelay, donotplunge.value==1])
     button_start.bg = (255, 50, 50)
     button_start.disable()
 
-    button_up   = PushButton(master=app, text="  Ready  ", grid=[0,11], align='left', command=powerup, args = [stateTracker,[button_start, button_pulse]])
+    button_up   = PushButton(master=app, text="  Ready  ", grid=[0,11], align='left', command=powerup, args = [stateTracker,button_start, button_pulse]])
     button_up.bg="lime green"
 
-    button_down = PushButton(master=app, text="  Abort  ", grid=[3,11], align='left', command=powerdown, args = [stateTracker,[button_start, button_pulse]])
+    button_down = PushButton(master=app, text="  Abort  ", grid=[3,11], align='left', command=powerdown, args = [stateTracker,button_start, button_pulse]])
     button_down.bg = "orange"
         
     # GUI for Cleaning operation
