@@ -24,7 +24,7 @@ def text_box(app, disp:str, position:list, default):
 #         print("Pedal triggered")
 #         startprocess()
 
-def startprocess(users_progress, rdelay, pdelay, is_dry_fire:bool):
+def startprocess(users_progress, stime, rdelay, pdelay, is_dry_fire:bool):
     '''
     This function takes in spraytime, retraction delay, and plunge delay to run BIUA&P in the system command line.
     :return: void
@@ -44,7 +44,7 @@ def startprocess(users_progress, rdelay, pdelay, is_dry_fire:bool):
 
     print("A&P finished.")
 
-def pulsestartprocess(users_progress, pdelay, pnum, plen, pinterval, is_dry_fire):
+def pulsestartprocess(users_progress, rdelay, pdelay, pnum, plen, pinterval, is_dry_fire):
     '''
     This function takes in retraction delay, plunge delay, and pulse length to run BIUA&P in the system command line.
     :param rdelay: retraction delay
