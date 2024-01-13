@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 from guizero import App, TextBox, Text, PushButton, CheckBox
-try: # for RPi
-    import RPi.GPIO as GPIO
-except: #if PC:
-    import gpio as GPIO
+#try: # for RPi
+import RPi.GPIO as GPIO
+#except: #if PC:
+#    import gpio as GPIO
 import BIUpinlist as pin
 from BIU_gui_helper_functions import *
 

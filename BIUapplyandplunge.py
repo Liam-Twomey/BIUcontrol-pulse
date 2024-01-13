@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-try:
-    import RPi.GPIO as GPIO # For RPi
-except:
-    import gpio as GPIO # Testing on Linux/Mac
+#try:
+import RPi.GPIO as GPIO # For RPi
+#except:
+#    import gpio as GPIO # Testing on Linux/Mac
 #import Adafruit_DHT
 import time, threading
 import argparse
