@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-# Uncomment for use of pi
-import RPi.GPIO as GPIO # For RPi
-#import gpio as GPIO # Testing on Linux/Mac
+try:
+    import RPi.GPIO as GPIO
+except:
+    import gpio as GPIO
 #import Adafruit_DHT
 import time, threading
 import argparse

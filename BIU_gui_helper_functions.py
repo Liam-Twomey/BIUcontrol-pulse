@@ -34,7 +34,7 @@ def startprocess(stime, rdelay, pdelay, is_dry_fire:bool):
     plungedelay      = str(float(pdelay.value)/1000)
     print('Starting A&P')
     arguments = ["python3","BIUapplyandplunge.py","--stime",spraytime,"--rdelay",retractiondelay,"--pdelay",plungedelay]
-    button_start.disable()
+    #button_start.disable()
     if is_dry_fire:
         arguments.append("--donotplunge")
     call(arguments)
@@ -56,7 +56,7 @@ def pulsestartprocess(rdelay, pdelay, pnum, plen, pinterval, is_dry_fire):
     pulselength      = str(float(plen.value)/1000)
     breaktime        = str(float(pinterval.value)/1000)
     arguments = ["python3","BIUapplyandplunge.py","--pulse","--pcycles",pnum.value,"--stime",pulselength, "--breaktime", breaktime, "--rdelay",retractiondelay,"--pdelay",plungedelay]
-    button_pulse.disable()
+    #button_pulse.disable()
     if (is_dry_fire):
         arguments.append("--donotplunge")
     call(arguments)
