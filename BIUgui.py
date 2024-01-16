@@ -9,7 +9,7 @@ import BIUpinlist as pin
 from BIU_gui_helper_functions import *
 
 # OPTIONS
-use_neotrellis = False#True
+use_neotrellis = True
 # Neotrellis options
 if use_neotrellis:
     from board import SCL, SDA
