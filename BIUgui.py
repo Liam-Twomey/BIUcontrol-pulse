@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
 
 from guizero import App, TextBox, Text, PushButton, CheckBox
-#try: # for RPi
-import RPi.GPIO as GPIO
-#except: #if PC:
-#    import gpio as GPIO
+try:
+    import RPi.GPIO as GPIO
+except:
+    import gpio as GPIO
 import BIUpinlist as pin
 from BIU_gui_helper_functions import *
 
 # OPTIONS
-use_neotrellis = True
+use_neotrellis = 1 
 # Neotrellis options
 if use_neotrellis:
     from board import SCL, SDA
     import busio
     from adafruit_neotrellis.neotrellis import NeoTrellis
 
-stateTracker = UserProgressTracker()
 
 if __name__=='__main__':
     app = App(title="Back-it-up", layout="grid", width = 600, height = 340)
@@ -38,18 +37,18 @@ if __name__=='__main__':
     button_title = Text(master=app, text="Triggers", grid=[0,9,4,1], color='white', bg='dim grey')
     donotplunge = CheckBox(master=app, text="Dry fire (do not plunge)?",   grid=[0,10,2,1], align='left')
 
-    button_pulse= PushButton(master=app, text="Pulse & Plunge", grid=[2,11], align='left', command=pulsestartprocess, args = [stateTracker,rdelay, pdelay, pnum, plen, pint, donotplunge.value==1])
+    button_pulse= PushButton(master=app, text="Pulse & Plunge", grid=[2,11], align='left', command=pulsestartprocess, args = [rdelay, pdelay, pnum, plen, pint, donotplunge.value==1])
     button_pulse.disable()
     button_pulse.bg = 'violet'
 
-    button_start= PushButton(master=app, text="Spray & Plunge", grid=[1,11], align='left', command=startprocess, args=[stateTracker,stime, rdelay, pdelay, donotplunge.value==1])
+    button_start= PushButton(master=app, text="Spray & Plunge", grid=[1,11], align='left', command=startprocess, args=[stime, rdelay, pdelay, donotplunge.value==1])
     button_start.bg = (255, 50, 50)
     button_start.disable()
 
-    button_up   = PushButton(master=app, text="  Ready  ", grid=[0,11], align='left', command=powerup, args = [stateTracker,[button_start, button_pulse]])
+    button_up   = PushButton(master=app, text="  Ready  ", grid=[0,11], align='left', command=powerup, args = [[button_start, button_pulse]])
     button_up.bg="lime green"
 
-    button_down = PushButton(master=app, text="  Abort  ", grid=[3,11], align='left', command=powerdown, args = [stateTracker,[button_start, button_pulse]])
+    button_down = PushButton(master=app, text="  Abort  ", grid=[3,11], align='left', command=powerdown, args = [[button_start, button_pulse]])
     button_down.bg = "orange"
         
     # GUI for Cleaning operation
@@ -175,11 +174,11 @@ if __name__=='__main__':
 
     #shutdown
     print('BIU program shutting down...')
-    if use_neotrellis:
-        for i in [0, 1, 2, 3, 4, 7]: 
-            trellis.pixels[i] = OFF
+    
+    for i in [0, 1, 2, 3, 4, 7]: 
+        trellis.pixels[i] = OFF
 
-    powerdown(stateTracker,[button_start, button_pulse])
-    GPIO.cleanup()
+    powerdown([button_start, button_pulse])
+    # GPIO.cleanup()
     
 

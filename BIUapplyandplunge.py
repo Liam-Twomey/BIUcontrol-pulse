@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-#try:
-import RPi.GPIO as GPIO # For RPi
-#except:
-#    import gpio as GPIO # Testing on Linux/Mac
+try:
+    import RPi.GPIO as GPIO
+except:
+    import gpio as GPIO
 #import Adafruit_DHT
 import time, threading
 import argparse
@@ -80,7 +80,6 @@ def resetplunger(plunger):
 ''' 
 
 if __name__=='__main__':
-    print('Starting BIUapplyandplunge.py')
     #Read flags from CLI input, store in args
     parser = argparse.ArgumentParser(description='Arguments for BIUcontrol')
     parser.add_argument('--stime',      help='Duration of sample application or pulse (seconds)',type=float,required=True)
@@ -158,5 +157,5 @@ if __name__=='__main__':
     powerdownsensors(pin.sensorpower)
 
     #GPIO.cleanup()
-    print("BIUapplyandplunge.py finished.")
+    print("Done!")
 
