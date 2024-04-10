@@ -1,5 +1,8 @@
 from guizero import App, TextBox, Text, PushButton, CheckBox
 from subprocess import call, Popen
+from pathlib import Path
+from datetime import datetime as dtm
+from datetime import date as dt
 
 def text_box(app, disp:str, position:list, default):
     '''
@@ -23,7 +26,7 @@ def text_box(app, disp:str, position:list, default):
 #         print("Pedal triggered")
 #         startprocess()
 
-def startprocess(stime, rdelay, pdelay, is_dry_fire:bool):
+def startprocess(stime, rdelay, pdelay, is_dry_fire:bool, sprayname, recfile) -> None:
     '''
     This function takes in spraytime, retraction delay, and plunge delay to run BIUA&P in the system command line.
     :return: void
@@ -41,7 +44,7 @@ def startprocess(stime, rdelay, pdelay, is_dry_fire:bool):
 
     print("A&P finished.")
 
-def pulsestartprocess(rdelay, pdelay, pnum, plen, pinterval, is_dry_fire):
+def pulsestartprocess(rdelay, pdelay, pnum, plen, pinterval, is_dry_fire, sprayname, recfile) -> None:
     '''
     This function takes in retraction delay, plunge delay, and pulse length to run BIUA&P in the system command line.
     :param rdelay: retraction delay
@@ -60,6 +63,16 @@ def pulsestartprocess(rdelay, pdelay, pnum, plen, pinterval, is_dry_fire):
     if (is_dry_fire):
         arguments.append("--donotplunge")
     call(arguments)
+    # write records to file
+    with open(Path(recfile),'w') as file:
+        timestamp = dtm.now().strftime("%d.%b %Y %H:%M:%S")
+        lines = ['/n__________',timestamp+' | '+ sprayname,' | Pulse Mode',
+        '\tRetraction Delay: '+retractiondelay+' s',
+        '\tPlunge Delay: '+plungedelay+' s',
+        '\t Pulse Length: '+pulselength+' s',
+        '\t Pulse Interval: '+breaktime+' s']
+        file.writelines(lines)
+        
     
 
 def powerup(tobe_enabled_buttons_list):
