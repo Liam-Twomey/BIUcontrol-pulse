@@ -40,7 +40,7 @@ if __name__=='__main__':
     # Text entry for record keeping
     stdlabel = Text(app, text="Spray Record Info:", color='white', grid=[2,4,2,1], bg = 'dim gray')
     spraynamelabel, sprayname = text_box(app, 'Spray Experiment Name', position = [2,5], default = 'New Experiment')
-    recfilelabel, recfile = text_box(app, 'Record-keeping file:', position = [2,6], default = './spray-record-{0}.txt'.format(dt.today()))
+    recfilelabel, recfile = text_box(app, 'Record-keeping file:', position = [2,6], default = './spray-records/spray-record-{0}.txt'.format(dt.today()))
 
     ## Buttons, commands are defined in BIU_gui_helper_functions.py
     button_title = Text(master=app, text="Triggers", grid=[0,10,4,1], color='white', bg='dim grey')
