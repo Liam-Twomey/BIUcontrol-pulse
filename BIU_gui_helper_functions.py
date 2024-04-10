@@ -43,6 +43,16 @@ def startprocess(stime, rdelay, pdelay, is_dry_fire:bool, sprayname, recfile) ->
     call(arguments)
 
     print("A&P finished.")
+    # Writing spray record.
+    with open(Path(recfile.value),'a') as file:
+        timestamp = dtm.now().strftime("%Y-%m-%d %H:%M:%S")
+        lines = ['\n__________\n',timestamp+' | '+ sprayname.value,' | Continuous Mode\n',
+        '\tSpray Length: '+spraytime+' s\n',
+        '\tRetraction Delay: '+retractiondelay+' s\n',
+        '\tPlunge Delay: '+plungedelay+' s\n']
+        file.writelines(lines)
+    print('Spray Record Saved to {0}'.format(recfile.value))
+    
 
 def pulsestartprocess(rdelay, pdelay, pnum, plen, pinterval, is_dry_fire, sprayname, recfile) -> None:
     '''
@@ -64,15 +74,16 @@ def pulsestartprocess(rdelay, pdelay, pnum, plen, pinterval, is_dry_fire, sprayn
         arguments.append("--donotplunge")
     call(arguments)
     # write records to file
-    with open(Path(recfile),'w') as file:
-        timestamp = dtm.now().strftime("%d.%b %Y %H:%M:%S")
-        lines = ['/n__________',timestamp+' | '+ sprayname,' | Pulse Mode',
-        '\tRetraction Delay: '+retractiondelay+' s',
-        '\tPlunge Delay: '+plungedelay+' s',
-        '\t Pulse Length: '+pulselength+' s',
-        '\t Pulse Interval: '+breaktime+' s']
+    with open(Path(recfile.value),'a') as file:
+        timestamp = dtm.now().strftime("%Y-%m-%d %H:%M:%S")
+        lines = ['\n__________\n',timestamp+' | '+ sprayname.value,' | Pulse Mode\n',
+        '\tPulse Length: '+pulselength+' s\n',
+        '\tPulse Interval: '+breaktime+' s\n',
+        '\tPulses: '+pnum.value+'\n',
+        '\tRetraction Delay: '+retractiondelay+' s\n',
+        '\tPlunge Delay: '+plungedelay+' s\n']
         file.writelines(lines)
-        
+    print('Spray Record Saved to {0}'.format(recfile.value))
     
 
 def powerup(tobe_enabled_buttons_list):
