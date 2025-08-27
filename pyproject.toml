@@ -1,0 +1,58 @@
+[project]
+name = "BIUcontrol"
+version = '2.0.0'
+description = "Software and firmware to control the Back-It-Up device."
+authors = [
+	{name = "John Rubinstein",}, 
+	{name= "Yong Zi Tan"},
+	{name = "Liam Twomey"},
+]
+maintainers = [
+	{name="Liam Twomey"},
+]
+readme = "README.rst"
+requires-python = ">=3.10"
+#license = "GPL-3.0-or-later"
+#license-files = ["LICENSE.txt"]
+classifiers = [
+	"Private :: Do Not Upload",
+	"Devlopment Status :: 4 - Beta",
+	"Intended Audience :: Scientists",
+	"Programming Language :: Python :: 3",
+]
+dependencies = [
+	'numpy',
+	'select',
+	'guizero',
+]
+
+[project.optional-dependencies]
+use=[
+	'RPi'
+]
+trellis=[
+	'busio'
+	'board',
+	'adafruit_neotrellis',
+]
+devel=[
+	'gpio',
+]
+doc = [
+	'sphinx', # documentation system
+	'pydata_sphinx_theme', # documentation theme
+	'sphinx_copybutton',# enables auto copying of snippets
+	'sphinx_design' # allows use of grid, button elements in docs
+	]
+
+[project.urls]
+Repository = "https://github.com/LiamTwomey/BIUcontrol-pulse"
+Issues = "https://github.com/Liam-Twomey/BIUcontrol-pulse/issues"
+Homepage = "https://github.com/LiamTwomey/BIUcontrol-pulse"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-dir]
+BIUcontrol = "src"

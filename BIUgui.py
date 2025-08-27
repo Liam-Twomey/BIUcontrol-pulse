@@ -5,8 +5,8 @@ try:
     import RPi.GPIO as GPIO
 except:
     import gpio as GPIO
-import BIUpinlist as pin
-from BIU_gui_helper_functions import *
+from BIUcontrol import BIUpinlist as pin
+from BIUcontrol.BIU_gui_helper_functions import *
 
 # OPTIONS
 try:
