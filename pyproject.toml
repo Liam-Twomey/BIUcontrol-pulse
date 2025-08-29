@@ -3,12 +3,12 @@ name = "BIUcontrol"
 version = '2.0.0'
 description = "Software and firmware to control the Back-It-Up device."
 authors = [
-	{name = "John Rubinstein",}, 
-	{name= "Yong Zi Tan"},
+	{name = "John Rubinstein"}, 
+	{name = "Yong Zi Tan"},
 	{name = "Liam Twomey"},
 ]
 maintainers = [
-	{name="Liam Twomey"},
+	{name = "Liam Twomey"},
 ]
 readme = "README.rst"
 requires-python = ">=3.10"
@@ -22,18 +22,15 @@ classifiers = [
 ]
 dependencies = [
 	'numpy',
-	'select',
 	'guizero',
 ]
 
 [project.optional-dependencies]
 use=[
-	'RPi'
+	'RPi.GPIO'
 ]
 trellis=[
-	'busio'
-	'board',
-	'adafruit_neotrellis',
+	'adafruit-circuitpython-neotrellis',
 ]
 devel=[
 	'gpio',

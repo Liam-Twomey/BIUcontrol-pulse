@@ -1,10 +1,14 @@
-#!/usr/bin/env python3
+#!python3
 
 from guizero import App, TextBox, Text, PushButton, CheckBox
-try:
+from platform import uname,node
+system = node()
+
+if 'raspberrypi' in system:
     import RPi.GPIO as GPIO
-except:
+else:
     import gpio as GPIO
+
 from BIUcontrol import BIUpinlist as pin
 from BIUcontrol.BIU_gui_helper_functions import *
 
@@ -21,7 +25,10 @@ try:
 except:
     use_neotrellis = 0
 
+scriptpath = Path('./src/')
+
 if __name__=='__main__':
+## guizero setup
     app = App(title="Back-it-up", layout="grid", width = 600, height = 380)
     
     # GUI for Standard Spray parameters entries
@@ -64,7 +71,7 @@ if __name__=='__main__':
     cleanlabel    = Text(app, text="Cleaning settings:", grid=[2,0,2,1], color='white', bg='dim gray')
     cleancycleslabel, cleancycles = text_box(app, 'Cleaning cycles:',     position = [2,1], default = 5)
     cleantimelabel, cleantime = text_box(app, 'Clean pulse length (ms):', position = [2,2], default = 200)
-    ## Buttons
+    # Buttons
     button_clean = PushButton(master = app, text=" Clean ", grid=[2,3,2,1], command=cleanprocess, args = [cleantime, cleancycles])
     button_clean.bg = "lightblue"
 
@@ -76,6 +83,7 @@ if __name__=='__main__':
     # GPIO.setmode(GPIO.BCM)
     # app.repeat(100,pedal)
 
+## Neotrellis setup 
     if use_neotrellis:
 
         # some color definitions
@@ -175,9 +183,9 @@ if __name__=='__main__':
             
         app.repeat(90, gui_repeating_tasks)
 
+## Final tasks
     app.display()
 
-    #shutdown
     print('BIU program shutting down...')
     
     for i in [0, 1, 2, 3, 4, 7]: 

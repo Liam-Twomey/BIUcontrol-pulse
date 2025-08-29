@@ -36,7 +36,7 @@ def startprocess(stime, rdelay, pdelay, is_dry_fire:bool, sprayname, recfile) ->
     retractiondelay  = str(float(rdelay.value)/1000)
     plungedelay      = str(float(pdelay.value)/1000)
     print('Starting A&P')
-    arguments = ["python3","BIUapplyandplunge.py","--stime",spraytime,"--rdelay",retractiondelay,"--pdelay",plungedelay]
+    arguments = ["python3",scriptpath+"BIUapplyandplunge.py","--stime",spraytime,"--rdelay",retractiondelay,"--pdelay",plungedelay]
     #button_start.disable()
     if is_dry_fire:
         arguments.append("--donotplunge")
@@ -68,7 +68,7 @@ def pulsestartprocess(rdelay, pdelay, pnum, plen, pinterval, is_dry_fire, sprayn
     plungedelay      = str(float(pdelay.value)/1000)
     pulselength      = str(float(plen.value)/1000)
     breaktime        = str(float(pinterval.value)/1000)
-    arguments = ["python3","BIUapplyandplunge.py","--pulse","--pcycles",pnum.value,"--stime",pulselength, "--breaktime", breaktime, "--rdelay",retractiondelay,"--pdelay",plungedelay]
+    arguments = ["python3",scriptpath+"BIUapplyandplunge.py","--pulse","--pcycles",pnum.value,"--stime",pulselength, "--breaktime", breaktime, "--rdelay",retractiondelay,"--pdelay",plungedelay]
     #button_pulse.disable()
     if (is_dry_fire):
         arguments.append("--donotplunge")
@@ -93,7 +93,7 @@ def powerup(tobe_enabled_buttons_list):
     :return: void
     '''
     print("Power up")
-    arguments = ["python3","BIUpowerupdown.py","--updown","up"]
+    arguments = ["python3",scriptpath+"BIUpowerupdown.py","--updown","up"]
     call(arguments)
     try:
         for button in tobe_enabled_buttons_list:
@@ -108,7 +108,7 @@ def powerdown(tobe_disabled_buttons_list):
     :return: void
     '''
     print("Power down")
-    arguments = ["python3","BIUpowerupdown.py","--updown","down"]
+    arguments = ["python3",scriptpath+"BIUpowerupdown.py","--updown","down"]
     call(arguments)
     try:
         for button in tobe_disabled_buttons_list:
@@ -126,7 +126,7 @@ def cleanprocess(cleantime, cleancycles):
     print("Starting clean process")
     spraytime  = str(float(cleantime.value)/1000)
     cycles = cleancycles.value
-    arguments = ["python3","BIUclean.py","--stime",spraytime,"--cycles",cycles]
+    arguments = ["python3",scriptpath+"BIUclean.py","--stime",spraytime,"--cycles",cycles]
     #print(arguments)
     #call(arguments)
     Popen(arguments)

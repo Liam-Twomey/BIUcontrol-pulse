@@ -1,0 +1,14 @@
+
+__________
+2025-08-27 16:31:12 | New Experiment | Continuous Mode
+	Spray Length: 0.03 s
+	Retraction Delay: 0.05 s
+	Plunge Delay: 0.05 s
+
+__________
+2025-08-27 16:31:17 | New Experiment | Pulse Mode
+	Pulse Length: 0.016 s
+	Pulse Interval: 0.02 s
+	Pulses: 5
+	Retraction Delay: 0.05 s
+	Plunge Delay: 0.05 s
