@@ -18,8 +18,10 @@ try:
     # create the trellis object and associate it to the the i2c object that was created
     trellis = NeoTrellis(i2c_bus)
     use_neotrellis = 1
+    print("Neotrellis control enabled.")
 except:
     use_neotrellis = 0
+    print("Neotrellis control disabled.")
 
 if __name__=='__main__':
     app = App(title="Back-it-up", layout="grid", width = 600, height = 380)
@@ -77,7 +79,7 @@ if __name__=='__main__':
     # app.repeat(100,pedal)
 
     if use_neotrellis:
-
+        print("Setting up Neotrellis...")
         # some color definitions
         OFF = (0, 0, 0)
         RED = (255, 0, 0)
