@@ -13,7 +13,7 @@ try:
     from board import SCL, SDA
     import busio
     from adafruit_neotrellis.neotrellis import NeoTrellis
-    # create the i2c object for the trellis
+    # create the i2c object for the trellis on the i2c1 bus
     i2c_bus = busio.I2C(SCL, SDA)
     # create the trellis object and associate it to the the i2c object that was created
     trellis = NeoTrellis(i2c_bus)
