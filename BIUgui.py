@@ -19,9 +19,9 @@ try:
     trellis = NeoTrellis(i2c_bus)
     use_neotrellis = 1
     print("Neotrellis control enabled.")
-except:
+except ModuleNotFoundError:
     use_neotrellis = 0
-    print("Neotrellis control disabled.")
+    print("Neotrellis module not installed. NeoTrellis mode disabled.")
 
 if __name__=='__main__':
     app = App(title="Back-it-up", layout="grid", width = 600, height = 380)
