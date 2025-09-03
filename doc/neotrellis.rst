@@ -9,3 +9,7 @@ Testing that the neotrellis is connected can be done from the shell with
 at the end of the address block.
 If it does not detect anything (all ``--`` throughout the block), then it means
 that the neotrellis is not connected properly.
+
+If you do not see an i2c connection, unplug and replug the GPIO pins going
+to the trellis, and check intermediate connections. This is typically the
+issue.

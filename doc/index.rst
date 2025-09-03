@@ -10,3 +10,4 @@ EPRsim documentation
     :hidden:
 
 coverpage
+neotrellis
